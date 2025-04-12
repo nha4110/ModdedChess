@@ -1,26 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Chess } from 'chess.js';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-const boardSize = 8;
-
 export default function GamePage() {
   const [game, setGame] = useState(new Chess());
   const [selected, setSelected] = useState<string | null>(null);
+  const [isWhiteTurn, setIsWhiteTurn] = useState(true);
 
-  const board = game.board();
+  const board = isWhiteTurn
+    ? game.board()
+    : [...game.board()].reverse().map(row => [...row].reverse());
 
   const handleClick = (row: number, col: number) => {
-    const square = String.fromCharCode(97 + col) + (8 - row);
+    const actualRow = isWhiteTurn ? row : 7 - row;
+    const actualCol = isWhiteTurn ? col : 7 - col;
+
+    const square = String.fromCharCode(97 + actualCol) + (8 - actualRow);
     if (selected) {
       const move = { from: selected, to: square };
       const result = game.move(move);
       if (result) {
         setGame(new Chess(game.fen()));
         setSelected(null);
+        setIsWhiteTurn(!isWhiteTurn);
       } else {
         setSelected(square);
       }
@@ -38,7 +43,7 @@ export default function GamePage() {
           </button>
         </Link>
         <h2 className="text-2xl font-bold">1v1 Offline</h2>
-        <div className="w-20" /> {/* placeholder to balance layout */}
+        <div className="w-20" />
       </div>
 
       <motion.div
@@ -49,16 +54,25 @@ export default function GamePage() {
       >
         {board.map((row, rowIndex) =>
           row.map((square, colIndex) => {
-            const squareColor =
-              (rowIndex + colIndex) % 2 === 0 ? 'bg-green-500' : 'bg-beige-100';
+            const isWhiteTile = (rowIndex + colIndex) % 2 === 0;
+            const squareColor = isWhiteTile ? 'bg-white' : 'bg-black';
+
             const piece = square ? `${square.color}${square.type}` : null;
+            const isWhitePiece = piece?.startsWith('w');
+
+            const pieceStyle = piece
+              ? isWhitePiece
+                ? 'text-white drop-shadow-[0_0_3px_black]'
+                : 'text-black drop-shadow-[0_0_3px_white]'
+              : '';
+
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 onClick={() => handleClick(rowIndex, colIndex)}
-                className={`${squareColor} w-16 h-16 flex items-center justify-center text-2xl cursor-pointer hover:brightness-110`}
+                className={`${squareColor} w-16 h-16 flex items-center justify-center text-2xl cursor-pointer hover:brightness-110 transition-all`}
               >
-                {piece ? renderPiece(piece) : ''}
+                {piece ? <span className={`${pieceStyle}`}>{renderPiece(piece)}</span> : ''}
               </div>
             );
           })
