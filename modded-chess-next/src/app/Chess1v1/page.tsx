@@ -32,7 +32,7 @@ export default function GamePage() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
       <div className="flex justify-between w-full max-w-2xl mb-6">
-        <Link href="/">
+        <Link href="/GameCollection">
           <button className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl font-semibold text-white shadow">
             ← Back
           </button>

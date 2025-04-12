@@ -21,7 +21,7 @@ export default function GameSelector() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.4 }}
       >
-        <Link href="/game">
+        <Link href="/Chess1v1">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
