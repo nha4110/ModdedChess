@@ -1,6 +1,5 @@
-// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import WalletConnect from './WalletConnect';
 import ChessGame from './pages/ChessGame';
 
@@ -20,12 +19,12 @@ const Home = () => {
 
 const App = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<ChessGame />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 };
 
