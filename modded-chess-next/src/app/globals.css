@@ -31,3 +31,37 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Path drawing animation */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 1000;
+  animation: draw 0.5s linear forwards;
+}
+
+/* Checkpoint icon brightness and hover effect */
+.checkpoint-icon {
+  transition: filter 0.3s ease, opacity 0.3s ease; /* Chỉ transition filter và opacity */
+  opacity: 1;
+  filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 165, 0, 0.8)); /* Độ sáng và glow mặc định */
+}
+
+.checkpoint-icon:hover {
+  filter: brightness(1.5) drop-shadow(0 0 20px rgba(255, 165, 0, 1)); /* Tăng độ sáng và glow khi hover */
+  opacity: 1;
+}
+
+/* Add a glow effect for checkpoints */
+.glow {
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+}
