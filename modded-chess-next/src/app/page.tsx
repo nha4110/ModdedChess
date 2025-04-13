@@ -92,14 +92,16 @@ export default function Home() {
           </motion.button>
 
           {/* Inventory Button */}
-          <motion.button
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 260, damping: 15 }}
-            className="w-60 px-10 py-4 rounded-2xl text-xl font-bold text-[#4b4b4b] bg-gradient-to-r from-[#f7facc] to-[#e5e09b] hover:from-[#ecefa9] hover:to-[#d6cf77] shadow-xl shadow-[#6f624a]/40 hover:shadow-[#6f624a]/60 transition duration-300 ease-in-out tracking-wide"
-          >
-            Inventory
-          </motion.button>
+          <Link href="/Inventory">
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 260, damping: 15 }}
+              className="w-60 px-10 py-4 rounded-2xl text-xl font-bold text-[#4b4b4b] bg-gradient-to-r from-[#f7facc] to-[#e5e09b] hover:from-[#ecefa9] hover:to-[#d6cf77] shadow-xl shadow-[#6f624a]/40 hover:shadow-[#6f624a]/60 transition duration-300 ease-in-out tracking-wide"
+            >
+              Inventory
+            </motion.button>
+          </Link>
 
           {/* New Audition Button */}
           <motion.button
