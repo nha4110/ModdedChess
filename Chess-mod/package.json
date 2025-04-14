@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "chess.js": "^1.2.0",
+    "chess.js": "^0.13.4",
     "framer-motion": "^12.6.5",
+    "lodash": "^4.17.21",
     "next": "^15.3.0",
     "react": "^19.1.0",
     "react-chessboard": "^4.7.2",
@@ -22,6 +23,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/chess.js": "^0.13.7",
+    "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
