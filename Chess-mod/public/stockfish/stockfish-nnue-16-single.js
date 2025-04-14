@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Stockfish Testing Framework</title>
+    <meta name="csrf-token" content="da0ca518209dde3da059c89f4395d9f6ac10ad07">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+      const darkThemeHash = "https://tests.stockfishchess.org/static/css/theme.dark.css?x=8ARWu5lwsmd9kWaD24u7%2F4Z5Gx79mlfPVPjmKqXMwuLvB3NIwpkQ9fwymne6Pypl";
+    </script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    >
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+      integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+      crossorigin="anonymous"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    >
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/skeleton-screen-css@1.1.0/dist/index.min.css"
+      integrity="sha384-bVhC78CCZuU0Ls4O2v9Jvh01lwXOdpJm+f1HFJZ81vNIB+S88EM7jx/vyLOlQUGC"
+      crossorigin="anonymous"
+    >
+
+    <link
+      rel="stylesheet"
+      href="https://tests.stockfishchess.org/static/css/application.css?x=izo%2F54QG25ouUgQZv4%2F2v0WVRAqO6QooYVHN4mUicEdO27xhs%2Fr5lXk3pnLjTuzU"
+    >
+
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+      integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+      crossorigin="anonymous"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script src="https://tests.stockfishchess.org/static/js/application.js?x=x75OCWRP95A3Qg28lzOITodnJS2DzCPN3ZLcbhgQErcACrNiThWpNkcqP4fg3PY7"></script>
+
+    <script src="https://tests.stockfishchess.org/static/js/notifications.js?x=4NMip5BhT84gKPdBGcIE8BFkUL0vVHPgODYdXV0GfemXROyakoSxPTbRrXqSOa2%2F"></script>
+
+    
+  </head>
+
+  <body>
+    <header class="navbar navbar-expand-lg sticky-top shadow-sm">
+      <nav
+        class="container-fluid flex-wrap flex-lg-nowrap"
+        aria-label="Main navigation"
+      >
+        <button
+          class="navbar-toggler p-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#leftsidebar"
+          aria-controls="leftsidebar"
+          aria-expanded="false"
+          aria-label="Toggle left sidebar navigation"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a
+          class="navbar-brand p-0 me-0 me-lg-2 d-flex align-items-center"
+          href="/"
+          aria-label="Bootstrap"
+        >
+          <div class="brand-logo d-inline me-lg-2"></div>
+          <p class="d-none d-lg-inline h-5 mb-0">Stockfish Testing Framework</p>
+        </a>
+
+        <button
+          class="navbar-toggler d-flex d-lg-none order-3 p-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#rightsidebar"
+          aria-controls="rightsidebar"
+          aria-expanded="false"
+          aria-label="Toggle user navigation"
+        >
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+
+        <div
+          class="offcanvas-lg offcanvas-end flex-grow-1"
+          id="rightsidebar"
+          aria-labelledby="rightsidebarOffcanvasLabel"
+          data-bs-scroll="true"
+        >
+          <div class="offcanvas-header px-4 pb-0">
+            <h5 class="offcanvas-title" id="rightsidebarOffcanvasLabel">
+              User
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+              data-bs-target="#rightsidebar"
+            ></button>
+          </div>
+
+          <div class="offcanvas-body p-4 pt-0 p-lg-0">
+            <hr class="d-lg-none">
+
+            <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+                <li class="nav-item col-6 col-lg-auto order-lg-2">
+                  <a class="nav-link py-2 px-0 px-lg-2" href="/login"
+                    ><i
+                      class="fa-solid fa-arrow-right-to-bracket d-inline d-lg-none me-2"
+                    ></i
+                    >Login</a
+                  >
+                </li>
+                <li class="nav-item col-6 col-lg-auto order-lg-2">
+                  <a class="nav-link py-2 px-0 px-lg-2" href="/signup"
+                    ><i class="fa-solid fa-user-plus d-inline d-lg-none me-2"></i
+                    >Register</a
+                  >
+                </li>
+              <li class="nav-item py-1 col-12 col-lg-auto order-lg-2">
+                <div class="vr d-none d-lg-flex h-100 mx-lg-2"></div>
+                <hr class="d-lg-none">
+              </li>
+              <li
+                class="nav-item col-6 col-lg-auto order-lg-2"
+                id="change-color-theme"
+              >
+                <div
+                  id="sun"
+                  style="display: none;"
+                  class="nav-link py-2 px-0 px-lg-2"
+                  title="Light Theme"
+                >
+                  <i class="fa fa-sun"></i
+                  ><span class="d-inline d-lg-none ms-2">Light Theme</span>
+                </div>
+                <div
+                  id="moon"
+                  style="display: inline-block;"
+                  class="nav-link py-2 px-0 px-lg-2"
+                  title="Dark Theme"
+                >
+                  <i class="fa fa-moon"></i>
+                  <span class="d-inline d-lg-none ms-2">Dark Theme</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container-fluid layout px-0">
+      <aside class="mainnavbar ps-lg-1">
+        <div
+          class="offcanvas-lg offcanvas-start"
+          id="leftsidebar"
+          aria-labelledby="leftsidebarOffcanvasLabel"
+        >
+          <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="leftsidebarOffcanvasLabel">
+              Fishtest
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+              data-bs-target="#leftsidebar"
+            ></button>
+          </div>
+          <div class="offcanvas-body pt-lg-2">
+            <nav class="links w-100">
+              <ul class="links-nav list-unstyled mb-0 pb-3 pb-md-2 pe-lg-1">
+                <li class="links-group">
+                  <strong
+                    class="links-heading d-flex w-100 align-items-center fw-semibold"
+                    >Tests</strong
+                  >
+                  <ul class="list-unstyled fw-normal small">
+                    <li>
+                      <a href="/tests" class="links-link rounded">Overview</a>
+                    </li>
+                    <li>
+                      <a
+                        href="/tests/finished?ltc_only=1"
+                        class="links-link rounded"
+                        >LTC</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="/tests/finished?success_only=1"
+                        class="links-link rounded"
+                        >Greens</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="/tests/finished?yellow_only=1"
+                        class="links-link rounded"
+                        >Yellows</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+
+                <li><hr class="my-1"></li>
+
+                <li class="links-group">
+                  <strong
+                    class="links-heading d-flex w-100 align-items-center fw-semibold"
+                    >Fishtest</strong
+                  >
+                  <ul class="list-unstyled fw-normal small">
+                    <li>
+                      <a href="/contributors" class="links-link rounded"
+                        >Contributors</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/contributors/monthly" class="links-link rounded"
+                        >Top Month</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/actions" class="links-link rounded">Events</a>
+                    </li>
+                    <li>
+                      <a href="/user_management" class="links-link rounded"
+                        >Users</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/workers/show" class="links-link rounded"
+                        >Blocked Workers</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+
+                <li><hr class="my-1"></li>
+
+                <li class="links-group">
+                  <strong
+                    class="links-heading d-flex w-100 align-items-center fw-semibold"
+                    >Stockfish</strong
+                  >
+                  <ul class="list-unstyled fw-normal small">
+                    <li>
+                      <a
+                        href="https://stockfishchess.org/download/"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded release"
+                        >Official Releases</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/Stockfish/releases?q=prerelease%3Atrue"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded release"
+                        >Prereleases</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://stockfishchess.org/get-involved/"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded get-involved"
+                        >Contribute</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/Stockfish/wiki/Regression-Tests"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded regression"
+                        >Progress</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/nns" class="links-link rounded">NN Repo</a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li><hr class="my-1"></li>
+
+                <li class="links-group">
+                  <strong
+                    class="links-heading d-flex w-100 align-items-center fw-semibold"
+                    >Resources</strong
+                  >
+                  <ul class="list-unstyled fw-normal small">
+                    <li>
+                      <a
+                        href="https://discord.gg/awnh2qZfTT"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded discord"
+                        >Discord</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/fishtest/wiki"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded wiki"
+                        >Fishtest Wiki</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/Stockfish/wiki"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded wiki"
+                        >Stockfish Wiki</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/nnue-pytorch/wiki"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded wiki"
+                        >NN Trainer Wiki</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/sprt_calc" class="links-link rounded"
+                        >SPRT Calc</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+
+                <li><hr class="my-1"></li>
+
+                <li class="links-group">
+                  <strong
+                    class="links-heading d-flex w-100 align-items-center fw-semibold"
+                    >Development</strong
+                  >
+                  <ul class="list-unstyled fw-normal small">
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/Stockfish"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded stockfish-repo"
+                        >Stockfish</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/fishtest"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded"
+                        >Fishtest</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/nnue-pytorch"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded"
+                        >NN Trainer</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/official-stockfish/books"
+                        target="_blank"
+                        rel="noopener"
+                        class="links-link rounded"
+                        >Books</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main order-1">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="flash-message mt-3">
+              <div
+                id="fallback_div"
+                class="alert alert-success alert-dismissible alert-success-non-transparent fixed-top"
+                style="display: none"
+              >
+                <span id="fallback">Notification!</span>
+                <button
+                  type="button"
+                  id="fallback_button"
+                  class="btn-close"
+                  aria-label="Close"
+                ></button>
+                <script>
+                  const fallback_button =
+                    document.getElementById("fallback_button");
+                  fallback_button.addEventListener("click", () => {
+                    dismissNotification("fallback_div");
+                  });
+                </script>
+              </div>
+              <div
+                id="error_div"
+                class="alert alert-danger alert-dismissible alert-danger-non-transparent fixed-top"
+                style="display: none"
+              >
+                <span id="error"></span>
+                <button
+                  type="button"
+                  id="error_button"
+                  class="btn-close"
+                  aria-label="Close"
+                ></button>
+                <script>
+                  const error_button =
+                    document.getElementById("error_button");
+                  error_button.addEventListener("click", () => {
+                      error_button.parentElement.style.display="none";
+                  });
+                </script>
+              </div>
+            </div>
+            <div>
+
+<script>
+  document.title = "Page not found";
+</script>
+
+<style>
+  .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 82vh;
+  }
+  .error-content {
+    text-align: center;
+  }
+  .error-heading {
+    font-size: 6rem;
+    color: #343a40;
+    margin-bottom: 1rem;
+  }
+  .error-message {
+    font-size: 1.5rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  .error-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #77828f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  .error-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<div class="error-container">
+  <div class="error-content">
+    <h1 class="error-heading">404</h1>
+    <h2 class="error-message">Oops! Page not found.</h2>
+    <p class="lead">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+    <a href="/" class="error-button">Go to Home</a>
+  </div>
+</div>
+</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
