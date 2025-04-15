@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaUserCircle } from 'react-icons/fa';
 
 export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const isSignedIn = false;
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   // Button styles for consistency
   const buttonStyles = `
@@ -33,6 +33,14 @@ export default function Home() {
     text-center
     block
   `;
+
+  // Check if the user is signed in on mount
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      setIsSignedIn(true);
+    }
+  }, []);
 
   return (
     <main
@@ -62,12 +70,18 @@ export default function Home() {
                     Profile
                   </Link>
                   <Link
-                    href="/inventory"
+                    href="/Inventory"
                     className="block px-4 py-2 hover:bg-[#6f624a]/70 text-[#f5f5dc] font-[Arial,Helvetica,sans-serif]"
                   >
                     Inventory
                   </Link>
-                  <button className="w-full text-left px-4 py-2 hover:bg-[#6f624a]/70 text-[#f5f5dc] rounded-b-lg font-[Arial,Helvetica,sans-serif]">
+                  <button
+                    className="w-full text-left px-4 py-2 hover:bg-[#6f624a]/70 text-[#f5f5dc] rounded-b-lg font-[Arial,Helvetica,sans-serif]"
+                    onClick={() => {
+                      localStorage.removeItem('userId'); // Remove the userId from localStorage
+                      setIsSignedIn(false); // Update the signed-in state
+                    }}
+                  >
                     Sign Out
                   </button>
                 </div>

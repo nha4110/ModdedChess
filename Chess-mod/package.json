@@ -9,23 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "chess.js": "^0.13.4",
     "framer-motion": "^12.6.5",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "next": "^15.3.0",
+    "pg": "^8.14.1",
     "react": "^19.1.0",
     "react-chessboard": "^4.7.2",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "stockfish": "^16.0.0",
-    "stockfish.wasm": "^0.10.0"
+    "stockfish.wasm": "^0.10.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^5.0.2",
     "@types/chess.js": "^0.13.7",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
+    "@types/pg": "^8.11.13",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

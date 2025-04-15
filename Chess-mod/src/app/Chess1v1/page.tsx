@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Chess, Square, Move } from 'chess.js';
+import { Chess, Square, Move, ShortMove } from 'chess.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import styles from './Game.module.css';
 
 interface ChessPiece {
   type: string;
@@ -69,23 +70,23 @@ export default function GamePage() {
     (square: Square) => {
       const piece = game.get(square);
       setError(null);
-  
+
       // Select piece
       if (piece && piece.color === (isWhiteTurn ? 'w' : 'b')) {
         setSelectedSquare(square);
         return;
       }
-  
+
       // Move piece
       if (selectedSquare && validMoves.includes(square)) {
-        const move: { from: string; to: string; promotion?: string } = {
+        const move: ShortMove = {
           from: selectedSquare,
           to: square,
         };
         if (game.get(selectedSquare)?.type === 'p' && (square[1] === '8' || square[1] === '1')) {
           move.promotion = 'q';
         }
-  
+
         try {
           const result = game.move(move);
           if (result) {
@@ -93,11 +94,11 @@ export default function GamePage() {
             setSelectedSquare(null);
             setIsWhiteTurn((prev) => !prev);
             setLastMovedSquare(square);
-            if (game.isGameOver()) {
+            if (game.game_over()) {
               setError(
-                game.isCheckmate()
+                game.in_checkmate()
                   ? `Checkmate! ${isWhiteTurn ? 'Black' : 'White'} wins!`
-                  : game.isStalemate()
+                  : game.in_stalemate()
                   ? "Stalemate! It's a draw."
                   : "Draw!"
               );
@@ -115,18 +116,11 @@ export default function GamePage() {
   );
 
   return (
-    <main
-      className="flex min-h-screen flex-col items-center justify-center p-4 text-white"
-      style={{
-        backgroundImage: "url('/marble-chess-bg.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div className="mb-6 flex w-full max-w-3xl justify-between">
+    <main className={styles.container}>
+      <div className={styles.header}>
         <Link href="/GameCollection">
           <motion.button
-            className="rounded-xl bg-red-600 px-4 py-2 font-semibold text-white shadow hover:bg-red-700"
+            className={styles.backButton}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -134,18 +128,18 @@ export default function GamePage() {
           </motion.button>
         </Link>
         <motion.h2
-          className="text-3xl font-bold"
+          className={styles.title}
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           1v1 Offline
         </motion.h2>
-        <div className="w-24" />
+        <div className={styles.placeholder} />
       </div>
 
       <motion.div
-        className="grid grid-cols-8 overflow-hidden rounded-xl border-4 border-white shadow-xl"
+        className={styles.board}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
@@ -178,7 +172,7 @@ export default function GamePage() {
       <AnimatePresence>
         {error && (
           <motion.div
-            className="mt-4 text-lg font-semibold text-red-500"
+            className={styles.error}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -216,8 +210,7 @@ function SquareComponent({
 
   return (
     <motion.div
-      className={`flex h-[10vmin] w-[10vmin] cursor-pointer items-center justify-center transition-colors
-        ${isWhiteTile ? 'bg-white' : 'bg-black'}`}
+      className={`${styles.square} ${isWhiteTile ? styles.whiteTile : styles.blackTile}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -228,7 +221,7 @@ function SquareComponent({
     >
       {pieceUnicode && (
         <motion.span
-          className="text-4xl font-bold"
+          className={styles.piece}
           style={{
             color: isWhitePiece ? PIECE_COLORS.white : PIECE_COLORS.black,
             fontFamily: "'ChessLeipzig', sans-serif",
@@ -250,7 +243,7 @@ function SquareComponent({
       <AnimatePresence>
         {isValidMove && (
           <motion.div
-            className="absolute h-5 w-5 rounded-full border-2 border-black bg-green-400 opacity-80"
+            className={styles.validMove}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 0.8, y: [0, -3, 0] }}
             exit={{ scale: 0, opacity: 0 }}
