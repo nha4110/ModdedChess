@@ -1,7 +1,6 @@
-/* Tailwind CSS v4 imports */
 @import "tailwindcss";
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+
+/* Tailwind CSS v4 directives */
 
 :root {
   --background: #ffffff;
