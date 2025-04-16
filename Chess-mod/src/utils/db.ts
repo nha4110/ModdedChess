@@ -7,6 +7,6 @@ const client = new Client({
 client.connect();
 
 export const db = {
-  query: (text: string, params: any[]) => client.query(text, params),
+  query: (text: string, params: unknown[]) => client.query(text, params),
   // You can add more database functions as needed
 };

@@ -106,3 +106,45 @@
       transform: translateY(0);
     }
   }
+  .walletActions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .connectButton, .removeButton, .revealButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #333;
+    border: 1px solid #ff4655;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .connectButton:hover, .removeButton:hover, .revealButton:hover {
+    background-color: #ff4655;
+  }
+  
+  .walletDropdown {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ff4655;
+    border-radius: 6px;
+    background-color: #111;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .walletDropdown:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .error {
+    color: #ff4c4c;
+    margin-top: 1rem;
+  }
+  

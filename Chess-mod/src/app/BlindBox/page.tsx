@@ -2,26 +2,23 @@
 
 import Link from 'next/link';
 import { motion, useAnimation } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 
-// Define the Item type
 interface Item {
   id: number;
   name: string;
   color: string;
   hoverColor: string;
   shadow: string;
-  image: string; // Image for the item
+  image: string;
 }
 
-// Define the Box type
 interface Box {
   id: number;
-  image: string; // Image for the box
+  image: string;
 }
 
-// Expanded list of items (more than 5 for spinning)
 const items: Item[] = [
   { id: 1, name: 'Classic Board & Black Pieces', color: 'from-green-400 to-lime-500', hoverColor: 'hover:from-green-500 hover:to-lime-600', shadow: 'hover:shadow-lime-500/60', image: '/items/item1.png' },
   { id: 2, name: 'Blue Board & White Pieces', color: 'from-blue-500 to-cyan-400', hoverColor: 'hover:from-blue-600 hover:to-cyan-500', shadow: 'hover:shadow-cyan-400/60', image: '/items/item2.png' },
@@ -35,61 +32,47 @@ const items: Item[] = [
   { id: 10, name: 'Obsidian Board & Green Pieces', color: 'from-gray-800 to-black', hoverColor: 'hover:from-gray-900 hover:to-black', shadow: 'hover:shadow-black/60', image: '/items/item10.png' },
 ];
 
-// Expanded list of boxes (10 boxes)
-const boxes: Box[] = [
-  { id: 1, image: '/boxes/box1.png' },
-  { id: 2, image: '/boxes/box2.png' },
-  { id: 3, image: '/boxes/box3.png' },
-  { id: 4, image: '/boxes/box4.png' },
-  { id: 5, image: '/boxes/box5.png' },
-  { id: 6, image: '/boxes/box6.png' },
-  { id: 7, image: '/boxes/box7.png' },
-  { id: 8, image: '/boxes/box8.png' },
-  { id: 9, image: '/boxes/box9.png' },
-  { id: 10, image: '/boxes/box10.png' },
-];
+const boxes: Box[] = Array.from({ length: 10 }, (_, i) => ({
+  id: i + 1,
+  image: `/boxes/box${i + 1}.png`,
+}));
 
 export default function ItemBoxPage() {
   const [selectedBox, setSelectedBox] = useState<Box | null>(null);
   const [revealedItem, setRevealedItem] = useState<Item | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [visibleItems, setVisibleItems] = useState<Item[]>(items.slice(0, 5)); // Initially show 5 items
+  const [visibleItems, setVisibleItems] = useState<Item[]>(items.slice(0, 5));
   const controls = useAnimation();
 
-  // Simulate box selection
   const handleBoxSelect = (box: Box) => {
     setSelectedBox(box);
-    setRevealedItem(null); // Reset revealed item when selecting a new box
+    setRevealedItem(null);
   };
 
-  // Simulate spinning animation and random item reveal
   const handleSpin = async () => {
-    if (!selectedBox) return;
+    if (!selectedBox || isSpinning) return;
 
     setIsSpinning(true);
     setRevealedItem(null);
 
-    // Simulate spinning by cycling through items
-    const totalSpins = 50; // Total items to cycle through during the spin
-    const spinDuration = 5; // Duration of the spin in seconds
+    const totalSpins = 50;
+    const spinDuration = 5;
     let currentIndex = 0;
 
-    // Fast-to-slow spinning effect
     for (let i = 0; i < totalSpins; i++) {
       currentIndex = (currentIndex + 1) % items.length;
-      const newVisibleItems = [];
+      const newVisible = [];
       for (let j = 0; j < 5; j++) {
-        newVisibleItems.push(items[(currentIndex + j) % items.length]);
+        newVisible.push(items[(currentIndex + j) % items.length]);
       }
-      setVisibleItems(newVisibleItems);
-      const delay = (spinDuration * 1000 * (i + 1)) / totalSpins; // Increasing delay for slowing effect
+      setVisibleItems(newVisible);
+      const delay = (spinDuration * 1000 * (i + 1)) / totalSpins;
       await new Promise((resolve) => setTimeout(resolve, delay / 10));
     }
 
-    // Randomly select the final item
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    setVisibleItems([randomItem, ...items.slice(0, 4)]); // Show the final item in the first slot (leftmost)
-    setRevealedItem(randomItem);
+    const finalItem = items[Math.floor(Math.random() * items.length)];
+    setVisibleItems([finalItem, ...items.slice(0, 4)]);
+    setRevealedItem(finalItem);
     setIsSpinning(false);
   };
 
@@ -109,7 +92,6 @@ export default function ItemBoxPage() {
         transition={{ duration: 0.8 }}
         className="flex flex-col items-center justify-center min-h-screen bg-[transparent] w-full"
       >
-        {/* Header */}
         <motion.h2
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -119,9 +101,7 @@ export default function ItemBoxPage() {
           🎁 Spin Your Item Box
         </motion.h2>
 
-        {/* Main Content */}
         <div className="absolute top-25 flex flex-row w-full max-w-7xl">
-          {/* Left: Box Selection Frame (35%) */}
           <motion.div
             className="w-[35%] bg-gradient-to-br from-gray-700 to-gray-900 p-4 rounded-2xl shadow-lg h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
             initial={{ y: 20, opacity: 0 }}
@@ -153,9 +133,7 @@ export default function ItemBoxPage() {
             </div>
           </motion.div>
 
-          {/* Right: Spinning Wheel Section (65%) */}
           <div className="w-[65%] flex flex-col items-center gap-6 pl-8">
-            {/* Large Box/Item Image */}
             <motion.div
               className="w-[400px] h-[300px] rounded-2xl bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center overflow-hidden"
               initial={{ opacity: 0 }}
@@ -197,14 +175,12 @@ export default function ItemBoxPage() {
               )}
             </motion.div>
 
-            {/* Spinning Wheel */}
             <motion.div
               className="relative w-[800px] h-[200px] rounded-2xl bg-gradient-to-br from-gray-600 to-gray-800 flex items-center overflow-hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
             >
-              {/* Spinning Items */}
               <motion.div
                 className="flex flex-row gap-2 pl-8"
                 animate={controls}
@@ -227,11 +203,9 @@ export default function ItemBoxPage() {
                 ))}
               </motion.div>
 
-              {/* Indicator Arrow (Positioned on the left) */}
               <div className="absolute top-1/2 left-4 transform -translate-y-1/2 w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-[#2cdd0c]"></div>
             </motion.div>
 
-            {/* Open Button */}
             <motion.button
               whileHover={{ scale: 1.07 }}
               whileTap={{ scale: 0.95 }}
@@ -246,14 +220,6 @@ export default function ItemBoxPage() {
             </motion.button>
           </div>
         </div>
-
-        {/* Back Link */}
-        <Link
-          href="/"
-          className="mt-170 text-lg font-semibold text-lime-300 hover:text-lime-400 transition-all duration-500 ease-in-out hover:underline hover:tracking-wider drop-shadow-[0_0_4px_#2cdd0c]"
-        >
-          ← Back to Menu
-        </Link>
       </motion.div>
     </main>
   );

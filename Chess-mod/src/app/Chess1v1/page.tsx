@@ -6,11 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import styles from './Game.module.css';
 
-interface ChessPiece {
-  type: string;
-  color: 'w' | 'b';
-}
-
 // Leipzig font import
 const leipzigFontStyles = `
   @font-face {

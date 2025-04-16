@@ -11,7 +11,7 @@ export { pool };
 // Export helper functions as well
 export const db = {
   // Run a query with text and params
-  query: async (text: string, params: any[] = []) => {
+  query: async (text: string, params: unknown[] = []) => {
     try {
       const res = await pool.query(text, params);
       return res;
@@ -29,10 +29,11 @@ export const db = {
   },
 
   createUser: async (email: string, username: string, passwordHash: string) => {
-    const query = 'INSERT INTO "UserInfo" (email, username, password_hash) VALUES ($1, $2, $3) RETURNING *';
+    const query =
+      'INSERT INTO "UserInfo" (email, username, password_hash) VALUES ($1, $2, $3) RETURNING *';
     const res = await db.query(query, [email, username, passwordHash]);
     return res.rows[0]; // Return the created user
   },
-  
+
   // You can add more helper functions for other database operations here
 };

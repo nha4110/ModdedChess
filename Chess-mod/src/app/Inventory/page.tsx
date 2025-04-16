@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -177,7 +177,7 @@ export default function ChessSkinSelector() {
                   alt="Selected chess board"
                   width={200}
                   height={200}
-                  className={`object-contain max-h-full max-w-full filter ${getSelectedBoardFilter()}`} 
+                  className={`object-contain max-h-full max-w-full filter ${getSelectedBoardFilter()}`}
                 />
               ) : (
                 <span className="text-gray-300 text-center text-xl">Select a board</span>
@@ -231,7 +231,7 @@ export default function ChessSkinSelector() {
                   alt="Selected chess pieces"
                   width={200}
                   height={200}
-                  className={`object-contain max-h-full max-w-full filter ${getSelectedPieceFilter()}`} // Use className
+                  className={`object-contain max-h-full max-w-full filter ${getSelectedPieceFilter()}`}
                 />
               ) : (
                 <span className="text-gray-300 text-center text-xl">Select a piece style</span>

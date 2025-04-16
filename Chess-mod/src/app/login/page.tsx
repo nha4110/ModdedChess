@@ -31,7 +31,7 @@ const Login = () => {
       } else {
         setError(data.error || 'Login failed');
       }
-    } catch (error) {
+    } catch {
       setError('Something went wrong. Please try again.');
     }
   };

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Chess, ChessInstance, ShortMove } from 'chess.js';
-import _ from 'lodash';
 
 // Define types for chess moves and evaluations
 interface EvaluatedMove {
@@ -28,7 +27,9 @@ export default function ChessBot() {
 
   // Update the board state from the chess.js instance
   const updateBoard = (game: ChessInstance) => {
-    const newBoard = Array(8).fill(null).map(() => Array(8).fill(''));
+    const newBoard = Array(8)
+      .fill(null)
+      .map(() => Array(8).fill(''));
     const position = game.board();
 
     for (let i = 0; i < 8; i++) {
@@ -171,7 +172,7 @@ export default function ChessBot() {
           }
           return;
         }
-      } catch (e) {
+      } catch {
         // Invalid move, continue to check if this is a new selection
       }
     }
@@ -188,7 +189,7 @@ export default function ChessBot() {
           verbose: true,
         }) as ShortMove[];
         setPossibleMoves(moves.map((move) => move.to));
-      } catch (e) {
+      } catch {
         setPossibleMoves([]);
       }
     } else {

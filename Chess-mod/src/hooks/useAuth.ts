@@ -1,8 +1,13 @@
-// src/hooks/useAuth.ts
 import { useEffect, useState } from 'react';
 
+// Define the user data type
+interface UserData {
+  username: string;
+  wallet: string;
+}
+
 export function useAuth() {
-  const [user, setUser] = useState<null | { username: string; wallet: string }>(null);
+  const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
     // Optionally, check localStorage or cookies for login
@@ -12,7 +17,7 @@ export function useAuth() {
     }
   }, []);
 
-  const login = (userData: any) => {
+  const login = (userData: UserData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
