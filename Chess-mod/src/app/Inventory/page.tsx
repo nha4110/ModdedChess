@@ -287,6 +287,7 @@ export default function ChessSkinSelector() {
         >
           ← Back to Menu
         </Link>
+        
       </motion.div>
     </main>
   );
