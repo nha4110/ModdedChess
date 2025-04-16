@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Chess, Square, Move, ShortMove } from 'chess.js';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import Link from 'next/link';
 import styles from './Game.module.css';
 
@@ -42,13 +42,28 @@ export default function GamePage() {
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastMovedSquare, setLastMovedSquare] = useState<Square | null>(null);
+  const [movingPiece, setMovingPiece] = useState<{ from: Square; to: Square; piece: string } | null>(null);
 
-  // Load font
+  // Sound effects
+  const moveSound = useRef<HTMLAudioElement | null>(null);
+  const captureSound = useRef<HTMLAudioElement | null>(null);
+  const winSound = useRef<HTMLAudioElement | null>(null);
+
+  // Load font and initialize sounds
   useEffect(() => {
+    // Font
     const styleSheet = document.createElement('style');
     styleSheet.textContent = leipzigFontStyles;
     document.head.appendChild(styleSheet);
-    return () => styleSheet.remove();
+
+    // Sounds
+    moveSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
+    captureSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3');
+    winSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3');
+
+    return () => {
+      styleSheet.remove();
+    };
   }, []);
 
   // Memoize valid moves
@@ -60,35 +75,62 @@ export default function GamePage() {
     [game, selectedSquare]
   );
 
-  // Handle square clicks
-  const handleClick = useCallback(
-    (square: Square) => {
-      const piece = game.get(square);
-      setError(null);
+  // Calculate position for animation
+  const getSquarePosition = (square: Square) => {
+    const col = square.charCodeAt(0) - 97; // a=0, b=1, ..., h=7
+    const row = 8 - parseInt(square[1]); // 1=7, 2=6, ..., 8=0
+    return { x: col * 10, y: row * 10 }; // 10vmin per square
+  };
 
-      // Select piece
-      if (piece && piece.color === (isWhiteTurn ? 'w' : 'b')) {
-        setSelectedSquare(square);
-        return;
+  // Handle square clicks
+const handleClick = useCallback(
+  (square: Square) => {
+    const piece = game.get(square);
+    setError(null);
+
+    // Select piece
+    if (piece && piece.color === (isWhiteTurn ? 'w' : 'b')) {
+      setSelectedSquare(square);
+      return;
+    }
+
+    // Move piece
+    if (selectedSquare && validMoves.includes(square)) {
+      const move: ShortMove = {
+        from: selectedSquare,
+        to: square,
+      };
+      const selectedPiece = game.get(selectedSquare);
+      if (selectedPiece?.type === 'p' && (square[1] === '8' || square[1] === '1')) {
+        move.promotion = 'q';
       }
 
-      // Move piece
-      if (selectedSquare && validMoves.includes(square)) {
-        const move: ShortMove = {
-          from: selectedSquare,
-          to: square,
-        };
-        if (game.get(selectedSquare)?.type === 'p' && (square[1] === '8' || square[1] === '1')) {
-          move.promotion = 'q';
+      try {
+        const isCapture = game.get(square) !== null;
+        // Ensure selectedPiece is not null before accessing its properties
+        if (!selectedPiece) {
+          throw new Error('No piece on selected square');
         }
+        const pieceKey = `${selectedPiece.color}${selectedPiece.type}`;
+        setMovingPiece({ from: selectedSquare, to: square, piece: pieceKey });
 
-        try {
+        // Animate piece movement
+        setTimeout(() => {
           const result = game.move(move);
           if (result) {
             setGame(new Chess(game.fen()));
             setSelectedSquare(null);
             setIsWhiteTurn((prev) => !prev);
             setLastMovedSquare(square);
+            setMovingPiece(null);
+
+            // Play sound
+            if (isCapture) {
+              captureSound.current?.play().catch(() => {});
+            } else {
+              moveSound.current?.play().catch(() => {});
+            }
+
             if (game.game_over()) {
               setError(
                 game.in_checkmate()
@@ -97,18 +139,21 @@ export default function GamePage() {
                   ? "Stalemate! It's a draw."
                   : "Draw!"
               );
+              winSound.current?.play().catch(() => {});
             }
           }
-        } catch {
-          setError('Invalid move');
-          setSelectedSquare(null);
-        }
-      } else {
+        }, 300); // Match animation duration
+      } catch {
+        setError('Invalid move');
         setSelectedSquare(null);
+        setMovingPiece(null);
       }
-    },
-    [game, isWhiteTurn, selectedSquare, validMoves]
-  );
+    } else {
+      setSelectedSquare(null);
+    }
+  },
+  [game, isWhiteTurn, selectedSquare, validMoves]
+);
 
   return (
     <main className={styles.container}>
@@ -158,9 +203,18 @@ export default function GamePage() {
                 isSelected={isSelected}
                 isLastMoved={isLastMoved}
                 onClick={() => handleClick(squareName)}
+                isMoving={movingPiece?.from === squareName}
               />
             );
           })
+        )}
+        {movingPiece && (
+          <MovingPiece
+            piece={movingPiece.piece}
+            from={movingPiece.from}
+            to={movingPiece.to}
+            getSquarePosition={getSquarePosition}
+          />
         )}
       </motion.div>
 
@@ -189,6 +243,7 @@ interface SquareComponentProps {
   isSelected: boolean;
   isLastMoved: boolean;
   onClick: () => void;
+  isMoving?: boolean;
 }
 
 function SquareComponent({
@@ -199,6 +254,7 @@ function SquareComponent({
   isSelected,
   isLastMoved,
   onClick,
+  isMoving,
 }: SquareComponentProps) {
   const isWhitePiece = piece?.startsWith('w');
   const pieceUnicode = piece ? LEIPZIG_PIECES[piece] : null;
@@ -214,7 +270,7 @@ function SquareComponent({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      {pieceUnicode && (
+      {pieceUnicode && !isMoving && (
         <motion.span
           className={styles.piece}
           style={{
@@ -247,5 +303,39 @@ function SquareComponent({
         )}
       </AnimatePresence>
     </motion.div>
+  );
+}
+
+interface MovingPieceProps {
+  piece: string;
+  from: Square;
+  to: Square;
+  getSquarePosition: (square: Square) => { x: number; y: number };
+}
+
+function MovingPiece({ piece, from, to, getSquarePosition }: MovingPieceProps) {
+  const isWhitePiece = piece.startsWith('w');
+  const pieceUnicode = LEIPZIG_PIECES[piece];
+  const fromPos = getSquarePosition(from);
+  const toPos = getSquarePosition(to);
+
+  return (
+    <motion.span
+      className={styles.piece}
+      style={{
+        color: isWhitePiece ? PIECE_COLORS.white : PIECE_COLORS.black,
+        fontFamily: "'ChessLeipzig', sans-serif",
+        textShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
+        filter: 'drop-shadow(0 0 3px rgba(0, 0, 0, 0.3))',
+        position: 'absolute',
+        fontSize: '2.25rem',
+        zIndex: 10,
+      }}
+      initial={{ x: fromPos.x + 'vmin', y: fromPos.y + 'vmin' }}
+      animate={{ x: toPos.x + 'vmin', y: toPos.y + 'vmin', scale: [1, 1.2, 1] }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
+      {pieceUnicode}
+    </motion.span>
   );
 }
