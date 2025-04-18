@@ -1,0 +1,21 @@
+{
+  "name": "Soviet PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Soviet and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#a09a6d"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Soviet"
+    }
+  ]
+}

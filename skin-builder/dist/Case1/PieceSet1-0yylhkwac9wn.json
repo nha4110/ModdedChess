@@ -1,0 +1,23 @@
+{
+  "name": "FIDE WC PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of FIDE WC and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#d685c9"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp",
+        "Aurora Flicker",
+        "Pulse Glow"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "FIDE WC"
+    }
+  ]
+}

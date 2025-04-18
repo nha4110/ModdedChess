@@ -1,0 +1,22 @@
+{
+  "name": "Alpha PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Alpha and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#29f61d"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp",
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Alpha"
+    }
+  ]
+}

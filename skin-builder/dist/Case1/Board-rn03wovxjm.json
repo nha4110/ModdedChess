@@ -1,0 +1,21 @@
+{
+  "name": "Arctic Ice Board NFT",
+  "description": "A unique Board NFT with a style of Arctic Ice and random effects.",
+  "type": "Board",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": [
+        "#a902aa",
+        "#bb4227"
+      ]
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Arctic Ice"
+    }
+  ]
+}

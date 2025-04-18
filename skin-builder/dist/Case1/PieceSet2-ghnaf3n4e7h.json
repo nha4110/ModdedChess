@@ -1,0 +1,22 @@
+{
+  "name": "Case PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Case and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#4ee42e"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Case"
+    }
+  ]
+}
