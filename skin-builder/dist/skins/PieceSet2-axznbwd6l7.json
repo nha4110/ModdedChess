@@ -1,0 +1,21 @@
+{
+  "name": "Pixel Art PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Pixel Art and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#c837df"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Pixel Art"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Digital Grid Board NFT",
+  "description": "A unique Board NFT with a style of Digital Grid and random effects.",
+  "type": "Board",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": [
+        "#2bddd8",
+        "#6bb9ab"
+      ]
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Digital Grid"
+    }
+  ]
+}

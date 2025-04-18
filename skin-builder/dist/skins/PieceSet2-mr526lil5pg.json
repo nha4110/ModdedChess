@@ -1,0 +1,22 @@
+{
+  "name": "Isle of Lewis PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Isle of Lewis and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#2655ac"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Pulse Glow",
+        "Aurora Flicker"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Isle of Lewis"
+    }
+  ]
+}

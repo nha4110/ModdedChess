@@ -1,0 +1,23 @@
+{
+  "name": "Regency PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Regency and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#3c25e2"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Lightning Spark",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Regency"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Barleycorn PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Barleycorn and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#aa2bef"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Barleycorn"
+    }
+  ]
+}

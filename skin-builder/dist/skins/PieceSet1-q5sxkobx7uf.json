@@ -1,0 +1,23 @@
+{
+  "name": "Silhouette PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Silhouette and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#e15d3d"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark",
+        "Pulse Glow",
+        "Flame Trail"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Silhouette"
+    }
+  ]
+}
