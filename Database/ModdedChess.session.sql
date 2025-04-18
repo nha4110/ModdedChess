@@ -7,6 +7,7 @@ CREATE TABLE "UserInfo" (
     wallet_address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE "UserInfo" ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;
 
 -- 2. Skins Table
 CREATE TABLE "Skins" (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import { toast, Toaster } from 'react-hot-toast';
 import styles from './Profile.module.css';
 
@@ -10,12 +10,14 @@ interface User {
   username: string;
   email: string;
   wallet_address: string | null;
+  is_admin: boolean;
 }
 
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('profile');
   const router = useRouter();
 
   useEffect(() => {
@@ -71,7 +73,6 @@ const Profile = () => {
 
       toast.success(`Connected to: ${address}`);
 
-      // Update wallet in database
       const userId = localStorage.getItem('userId');
       if (userId) {
         const response = await fetch('/api/user', {
@@ -80,7 +81,7 @@ const Profile = () => {
             'Content-Type': 'application/json',
             'user-id': userId,
           },
-          body: JSON.stringify({ wallet_address: address }), // Correct key for wallet_address
+          body: JSON.stringify({ wallet_address: address }),
         });
 
         const result = await response.json();
@@ -122,19 +123,50 @@ const Profile = () => {
           <div className={styles.avatar}></div>
           <h1 className={styles.username}>{user.username}</h1>
         </div>
-        <div className={styles.details}>
-          <p className={styles.detail}>
-            <span className={styles.label}>Email:</span> {user.email}
-          </p>
-          <p className={styles.detail}>
-            <span className={styles.label}>Wallet (DB):</span>{' '}
-            {user.wallet_address || 'Not provided'}
-          </p>
-          <p className={styles.detail}>
-            <span className={styles.label}>Wallet (Local):</span>{' '}
-            {walletAddress || 'Not connected'}
-          </p>
+
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === 'profile' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
+          </button>
+          {user.is_admin && (
+            <button
+              className={`${styles.tab} ${activeTab === 'nft' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('nft')}
+            >
+              Manage NFTs
+            </button>
+          )}
         </div>
+
+        {activeTab === 'profile' && (
+          <div className={styles.details}>
+            <p className={styles.detail}>
+              <span className={styles.label}>Email:</span> {user.email}
+            </p>
+            <p className={styles.detail}>
+              <span className={styles.label}>Wallet (DB):</span>{' '}
+              {user.wallet_address || 'Not provided'}
+            </p>
+            <p className={styles.detail}>
+              <span className={styles.label}>Wallet (Local):</span>{' '}
+              {walletAddress || 'Not connected'}
+            </p>
+            <p className={styles.detail}>
+              <span className={styles.label}>Role:</span>{' '}
+              {user.is_admin ? 'Admin' : 'User'}
+            </p>
+          </div>
+        )}
+
+        {activeTab === 'nft' && user.is_admin && (
+          <div className={styles.nftSection}>
+            <h2 className={styles.sectionTitle}>Manage NFTs</h2>
+            <p>Placeholder for NFT management (to be implemented later).</p>
+          </div>
+        )}
 
         <div className={styles.walletActions}>
           {!walletAddress ? (
