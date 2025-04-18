@@ -1,0 +1,24 @@
+{
+  "name": "Striped Marble Board NFT",
+  "description": "A unique Board NFT with a style of Striped Marble and random effects.",
+  "type": "Board",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": [
+        "#4a0b66",
+        "#4e2bc8"
+      ]
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Striped Marble"
+    }
+  ]
+}

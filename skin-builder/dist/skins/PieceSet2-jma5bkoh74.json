@@ -1,0 +1,21 @@
+{
+  "name": "Staunton PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Staunton and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#514a05"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Staunton"
+    }
+  ]
+}

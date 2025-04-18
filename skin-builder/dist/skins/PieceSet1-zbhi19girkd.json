@@ -1,0 +1,23 @@
+{
+  "name": "Calvert PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Calvert and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#bcf19b"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Pulse Glow",
+        "Flame Trail"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Calvert"
+    }
+  ]
+}

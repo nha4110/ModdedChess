@@ -1,0 +1,22 @@
+{
+  "name": "Lardy PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Lardy and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#16e85b"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail",
+        "Pulse Glow"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Lardy"
+    }
+  ]
+}

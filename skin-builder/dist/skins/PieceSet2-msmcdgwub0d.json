@@ -1,0 +1,23 @@
+{
+  "name": "Kingdom PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Kingdom and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#1cd1ba"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Pulse Glow",
+        "Flame Trail"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Kingdom"
+    }
+  ]
+}

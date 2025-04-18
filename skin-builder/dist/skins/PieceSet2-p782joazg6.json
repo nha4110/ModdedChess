@@ -1,0 +1,22 @@
+{
+  "name": "Mérida PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of Mérida and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#489e6a"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Mérida"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Dubrovnik PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Dubrovnik and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#c00db2"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Dubrovnik"
+    }
+  ]
+}

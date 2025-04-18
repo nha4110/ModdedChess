@@ -1,0 +1,18 @@
+{
+  "name": "Modernist PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of Modernist and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#5cc670"
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Modernist"
+    }
+  ]
+}

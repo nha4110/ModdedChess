@@ -7,9 +7,42 @@ const canvas = require('canvas');
 
 // Directory path (relative to dist)
 const SKINS_DIR = path.join(__dirname, 'skins'); // skins is in dist, PNGs saved here too
+const ICON_PATH = path.join(__dirname, 'knight.png'); // Path to knight icon in dist
+
+// Function to draw a knight by loading an icon and applying a color tint to the inner area
+async function drawKnight(ctx, color, canvasWidth, canvasHeight) {
+    // Load the knight icon
+    const img = await canvas.loadImage(ICON_PATH);
+
+    // Calculate scaling to fit the image within the canvas (maintaining aspect ratio)
+    const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height) * 0.8; // 80% of canvas size
+    const imgWidth = img.width * scale;
+    const imgHeight = img.height * scale;
+    const x = (canvasWidth - imgWidth) / 2; // Center horizontally
+    const y = (canvasHeight - imgHeight) / 2; // Center vertically
+
+    // Create a temporary canvas for the inner area
+    const tempCanvas = canvas.createCanvas(imgWidth, imgHeight);
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // Draw the original image on the temporary canvas
+    tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+
+    // Apply the color tint to the inner area (non-transparent pixels)
+    tempCtx.globalCompositeOperation = 'source-in'; // Only keep the color in non-transparent areas
+    tempCtx.fillStyle = color;
+    tempCtx.fillRect(0, 0, imgWidth, imgHeight);
+
+    // Draw the tinted inner area onto the main canvas
+    ctx.drawImage(tempCanvas, x, y, imgWidth, imgHeight);
+
+    // Draw the original image on top to preserve the border
+    ctx.globalCompositeOperation = 'destination-over'; // Draw behind the tinted area
+    ctx.drawImage(img, x, y, imgWidth, imgHeight);
+}
 
 // Function to generate a PNG image for an NFT
-function generateNFTImage(nft, filename) {
+async function generateNFTImage(nft, filename) {
     const width = 400;
     const height = 400;
     const canvasInstance = canvas.createCanvas(width, height);
@@ -33,9 +66,8 @@ function generateNFTImage(nft, filename) {
             }
         }
     } else {
-        // For PieceSet1/PieceSet2: Solid color background
-        ctx.fillStyle = colorAttr;
-        ctx.fillRect(0, 0, width, height);
+        // For PieceSet1/PieceSet2: Draw knight with transparent background
+        await drawKnight(ctx, colorAttr, width, height);
     }
 
     // Save the image in the same directory as JSON
@@ -46,7 +78,7 @@ function generateNFTImage(nft, filename) {
 }
 
 // Function to generate images for all NFTs
-function generateAllNFTImages() {
+async function generateAllNFTImages() {
     // Read all JSON files from skins directory
     const files = fs.readdirSync(SKINS_DIR).filter(file => file.endsWith('.json'));
 
@@ -54,7 +86,7 @@ function generateAllNFTImages() {
     for (const file of files) {
         const filePath = path.join(SKINS_DIR, file);
         const nftData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        generateNFTImage(nftData, file);
+        await generateNFTImage(nftData, file);
     }
 
     console.log(`Generated ${files.length} NFT images in ${SKINS_DIR}.`);
