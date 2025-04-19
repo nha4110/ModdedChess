@@ -6,35 +6,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import styles from './Game.module.css';
 
-// Leipzig font import
-const leipzigFontStyles = `
-  @font-face {
-    font-family: 'ChessLeipzig';
-    src: url('https://cdn.jsdelivr.net/npm/chess-fonts@1.0.0/leipzig/Leipzig.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-  }
-`;
+// Type definition for NFT JSON
+interface NFTJson {
+  name: string;
+  description: string;
+  type: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string | string[];
+  }>;
+}
 
-const PIECE_COLORS = {
-  white: '#FFFFFF',
-  black: '#000000',
-} as const;
+// Hardcoded NFT JSON (replace with fetch from Pinata/database later)
+const nftJson: NFTJson | null = null; // Test default case; restore original for NFT behavior
+// const nftJson: NFTJson | null = {
+//   name: 'Modernist PieceSet1 NFT',
+//   description: 'A unique PieceSet1 NFT with a style of Modernist and random effects.',
+//   type: 'PieceSet1',
+//   attributes: [
+//     { trait_type: 'Color', value: '#c0fbf5' },
+//     { trait_type: 'Effect', value: ['Shadow Wisp'] },
+//     { trait_type: 'Style', value: 'alpha' },
+//   ],
+// };
 
-const LEIPZIG_PIECES: Record<string, string> = {
-  wp: '♙',
-  bp: '♟',
-  wr: '♖',
-  br: '♜',
-  wn: '♘',
-  bn: '♞',
-  wb: '♗',
-  bb: '♝',
-  wq: '♕',
-  bq: '♛',
-  wk: '♔',
-  bk: '♚',
-};
+interface Style {
+  name: string;
+  pieces: Record<string, string>;
+}
 
 export default function GamePage() {
   const [game, setGame] = useState(() => new Chess());
@@ -43,23 +42,52 @@ export default function GamePage() {
   const [error, setError] = useState<string | null>(null);
   const [lastMovedSquare, setLastMovedSquare] = useState<Square | null>(null);
   const [movingPiece, setMovingPiece] = useState<{ from: Square; to: Square; piece: string } | null>(null);
+  const [pieceStyles, setPieceStyles] = useState<Style[]>([]);
+  const [selectedStyle, setSelectedStyle] = useState<string>('alpha'); // Default to alpha
+  const [boardColor, setBoardColor] = useState<string | null>(null); // NFT color or null for default
 
   const moveSound = useRef<HTMLAudioElement | null>(null);
   const captureSound = useRef<HTMLAudioElement | null>(null);
   const winSound = useRef<HTMLAudioElement | null>(null);
 
+  // Fetch styles from API
   useEffect(() => {
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = leipzigFontStyles;
-    document.head.appendChild(styleSheet);
+    async function fetchStyles() {
+      try {
+        const response = await fetch('/api/styles');
+        const data = await response.json();
+        if (data.success) {
+          setPieceStyles(data.styles);
+        } else {
+          console.error('Failed to fetch styles:', data.error);
+        }
+      } catch (error) {
+        console.error('Error fetching styles:', error);
+      }
+    }
+    fetchStyles();
+  }, []);
 
+  // Set style and color from NFT JSON (or use defaults)
+  useEffect(() => {
+    if (!nftJson) {
+      setSelectedStyle('alpha'); // Default style
+      setBoardColor(null); // Use CSS default colors
+      return;
+    }
+
+    const styleAttr = nftJson.attributes.find((attr: { trait_type: string; value: string | string[] }) => attr.trait_type === 'Style');
+    const colorAttr = nftJson.attributes.find((attr: { trait_type: string; value: string | string[] }) => attr.trait_type === 'Color');
+
+    setSelectedStyle(typeof styleAttr?.value === 'string' ? styleAttr.value : 'alpha');
+    setBoardColor(typeof colorAttr?.value === 'string' ? colorAttr.value : null);
+  }, []);
+
+  // Initialize sounds
+  useEffect(() => {
     moveSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
     captureSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3');
     winSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3');
-
-    return () => {
-      styleSheet.remove();
-    };
   }, []);
 
   const validMoves = useMemo(
@@ -143,6 +171,12 @@ export default function GamePage() {
     [game, isWhiteTurn, selectedSquare, validMoves]
   );
 
+  // Get piece mappings for the selected style
+  const pieceMap = useMemo(() => {
+    const style = pieceStyles.find((s) => s.name === selectedStyle);
+    return style ? style.pieces : {};
+  }, [pieceStyles, selectedStyle]);
+
   return (
     <main className={styles.container}>
       <div className={styles.header}>
@@ -164,6 +198,20 @@ export default function GamePage() {
           1v1 Offline
         </motion.h2>
         <div className={styles.placeholder} />
+      </div>
+
+      <div className={styles.styleSelector}>
+        <select
+          value={selectedStyle}
+          onChange={(e) => setSelectedStyle(e.target.value)}
+          className={styles.styleDropdown}
+        >
+          {pieceStyles.map((style) => (
+            <option key={style.name} value={style.name}>
+              {style.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <motion.div
@@ -192,6 +240,8 @@ export default function GamePage() {
                 isLastMoved={isLastMoved}
                 onClick={() => handleClick(squareName)}
                 isMoving={movingPiece?.from === squareName}
+                pieceMap={pieceMap}
+                boardColor={boardColor}
               />
             );
           })
@@ -202,6 +252,7 @@ export default function GamePage() {
             from={movingPiece.from}
             to={movingPiece.to}
             getSquarePosition={getSquarePosition}
+            pieceMap={pieceMap}
           />
         )}
       </motion.div>
@@ -232,6 +283,8 @@ interface SquareComponentProps {
   isLastMoved: boolean;
   onClick: () => void;
   isMoving?: boolean;
+  pieceMap: Record<string, string>;
+  boardColor: string | null;
 }
 
 function SquareComponent({
@@ -243,13 +296,15 @@ function SquareComponent({
   isLastMoved,
   onClick,
   isMoving,
+  pieceMap,
+  boardColor,
 }: SquareComponentProps) {
-  const isWhitePiece = piece?.startsWith('w');
-  const pieceUnicode = piece ? LEIPZIG_PIECES[piece] : null;
+  const pieceSrc = piece ? pieceMap[piece] : null;
 
   return (
     <motion.div
       className={`${styles.square} ${isWhiteTile ? styles.whiteTile : styles.blackTile}`}
+      style={boardColor ? { backgroundColor: isWhiteTile ? boardColor : darkenColor(boardColor, 0.7) } : {}}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -260,16 +315,15 @@ function SquareComponent({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      {pieceUnicode && !isMoving && (
-        <motion.span
+      {pieceSrc && !isMoving && (
+        <motion.img
+          src={pieceSrc}
+          alt={piece || 'chess piece'}
           className={styles.piece}
           style={{
-            color: isWhitePiece ? PIECE_COLORS.white : PIECE_COLORS.black,
-            fontFamily: "'ChessLeipzig', sans-serif",
-            textShadow: isWhiteTile
-              ? '0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000'
-              : '0.5px 0.5px 0 #fff, -0.5px -0.5px 0 #fff, 0.5px -0.5px 0 #fff, -0.5px 0.5px 0 #fff',
-            filter: 'drop-shadow(0 0 3px rgba(0, 0, 0, 0.3))',
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
           }}
           animate={{
             scale: isSelected ? 1.15 : 1,
@@ -277,9 +331,7 @@ function SquareComponent({
             boxShadow: isLastMoved ? '0 0 8px #FFD700' : 'none',
           }}
           transition={{ duration: 0.3 }}
-        >
-          {pieceUnicode}
-        </motion.span>
+        />
       )}
       <AnimatePresence>
         {isValidMove && (
@@ -301,21 +353,23 @@ interface MovingPieceProps {
   from: Square;
   to: Square;
   getSquarePosition: (square: Square) => { x: number; y: number };
+  pieceMap: Record<string, string>;
 }
 
-function MovingPiece({ piece, from, to, getSquarePosition }: MovingPieceProps) {
-  const isWhitePiece = piece.startsWith('w');
-  const pieceUnicode = LEIPZIG_PIECES[piece];
+function MovingPiece({ piece, from, to, getSquarePosition, pieceMap }: MovingPieceProps) {
+  const pieceSrc = pieceMap[piece];
   const fromPos = getSquarePosition(from);
   const toPos = getSquarePosition(to);
 
   return (
-    <motion.span
+    <motion.img
+      src={pieceSrc}
+      alt={piece}
       className={styles.piece}
       style={{
-        color: isWhitePiece ? PIECE_COLORS.white : PIECE_COLORS.black,
-        fontFamily: "'ChessLeipzig', sans-serif",
-        textShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
+        width: '10vmin',
+        height: '10vmin',
+        objectFit: 'contain',
         position: 'absolute',
         left: `${fromPos.x}vmin`,
         top: `${fromPos.y}vmin`,
@@ -325,8 +379,16 @@ function MovingPiece({ piece, from, to, getSquarePosition }: MovingPieceProps) {
         top: `${toPos.y}vmin`,
       }}
       transition={{ duration: 0.3 }}
-    >
-      {pieceUnicode}
-    </motion.span>
+    />
   );
+}
+
+// Utility to darken a color for black tiles
+function darkenColor(hex: string, factor: number): string {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+
+  return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
 }
