@@ -22,8 +22,9 @@ function generateNFT(type: NFTType) {
     };
 
     // Generate a random filename for the NFT JSON
-    const filename = `${type}-${Math.random().toString(36).substring(2, 15)}.json`;
-
+    const randomNum = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
+    const filename = `${type}-${randomNum}.json`;
+    
     // Save the NFT JSON to a file
     saveNFTToFile(filename, nft);
 }

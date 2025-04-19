@@ -8,6 +8,7 @@ exports.effects = [
     "Shadow Wisp",
     "Aurora Flicker",
     "Lightning Spark",
+    "None"
 ];
 exports.styles = {
     boardStyles: [

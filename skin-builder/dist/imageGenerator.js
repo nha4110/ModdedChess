@@ -1,96 +1,129 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 
-const fs = require('fs');
-const path = require('path');
-const canvas = require('canvas');
+const fs = require("fs");
+const path = require("path");
+const canvas = require("canvas");
 
-// Directory path (relative to dist)
-const SKINS_DIR = path.join(__dirname, 'skins'); // skins is in dist, PNGs saved here too
-const ICON_PATH = path.join(__dirname, 'knight.png'); // Path to knight icon in dist
+// Paths
+const SKINS_DIR = path.join(__dirname, "skins");
+const ICON_PATH = path.join(__dirname, "knight.png");
+const OUTLINE_PATH = path.join(__dirname, "knight_outline.png");
 
-// Function to draw a knight by loading an icon and applying a color tint to the inner area
-async function drawKnight(ctx, color, canvasWidth, canvasHeight) {
-    // Load the knight icon
-    const img = await canvas.loadImage(ICON_PATH);
-
-    // Calculate scaling to fit the image within the canvas (maintaining aspect ratio)
-    const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height) * 0.8; // 80% of canvas size
-    const imgWidth = img.width * scale;
-    const imgHeight = img.height * scale;
-    const x = (canvasWidth - imgWidth) / 2; // Center horizontally
-    const y = (canvasHeight - imgHeight) / 2; // Center vertically
-
-    // Create a temporary canvas for the inner area
-    const tempCanvas = canvas.createCanvas(imgWidth, imgHeight);
-    const tempCtx = tempCanvas.getContext('2d');
-
-    // Draw the original image on the temporary canvas
-    tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
-
-    // Apply the color tint to the inner area (non-transparent pixels)
-    tempCtx.globalCompositeOperation = 'source-in'; // Only keep the color in non-transparent areas
-    tempCtx.fillStyle = color;
-    tempCtx.fillRect(0, 0, imgWidth, imgHeight);
-
-    // Draw the tinted inner area onto the main canvas
-    ctx.drawImage(tempCanvas, x, y, imgWidth, imgHeight);
-
-    // Draw the original image on top to preserve the border
-    ctx.globalCompositeOperation = 'destination-over'; // Draw behind the tinted area
-    ctx.drawImage(img, x, y, imgWidth, imgHeight);
+// 🔍 Utility: Check if a color is light (returns true = use black outline)
+function isColorLight(hexColor) {
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+    // Perceived brightness
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180; // tweak as needed
 }
 
-// Function to generate a PNG image for an NFT
+// 🎯 Draw knight piece with outline and dynamic outline color
+async function drawKnight(ctx, color, canvasWidth, canvasHeight) {
+    const img = await canvas.loadImage(ICON_PATH);
+    const outlineImg = await canvas.loadImage(OUTLINE_PATH);
+
+    const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height) * 0.8;
+    const imgWidth = img.width * scale;
+    const imgHeight = img.height * scale;
+    const x = (canvasWidth - imgWidth) / 2;
+    const y = (canvasHeight - imgHeight) / 2;
+
+    // Tint base knight
+    const tempCanvas = canvas.createCanvas(imgWidth, imgHeight);
+    const tempCtx = tempCanvas.getContext("2d");
+    tempCtx.drawImage(img, 0, 0, imgWidth, imgHeight);
+    tempCtx.globalCompositeOperation = "source-in";
+    tempCtx.fillStyle = color;
+    tempCtx.fillRect(0, 0, imgWidth, imgHeight);
+    ctx.drawImage(tempCanvas, x, y, imgWidth, imgHeight);
+
+    // Adjust outline color
+    const outlineColor = isColorLight(color) ? "#000000" : "#FFFFFF";
+
+    // Apply outline tint
+    const outlineCanvas = canvas.createCanvas(imgWidth, imgHeight);
+    const outlineCtx = outlineCanvas.getContext("2d");
+    outlineCtx.drawImage(outlineImg, 0, 0, imgWidth, imgHeight);
+    outlineCtx.globalCompositeOperation = "source-in";
+    outlineCtx.fillStyle = outlineColor;
+    outlineCtx.fillRect(0, 0, imgWidth, imgHeight);
+    ctx.drawImage(outlineCanvas, x, y, imgWidth, imgHeight);
+}
+
+// ☁️ Gradient background (light blue in center → dark blue edges)
+function drawGradientBackground(ctx, width, height) {
+    const gradient = ctx.createRadialGradient(
+        width / 2,
+        height / 2,
+        50,
+        width / 2,
+        height / 2,
+        width / 1.5
+    );
+    gradient.addColorStop(0, "#A6D8FF"); // light center
+    gradient.addColorStop(1, "#2B5D81"); // darker edge
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+}
+
+// 🧱 Draw 2x2 board with bold outlines
+function drawBoard(ctx, width, height, colors) {
+    const squareSize = width / 2;
+    for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 2; col++) {
+            const isEven = (row + col) % 2 === 0;
+            ctx.fillStyle = isEven ? colors[0] : colors[1];
+            const x = col * squareSize;
+            const y = row * squareSize;
+            ctx.fillRect(x, y, squareSize, squareSize);
+
+            // Square border
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 6;
+            ctx.strokeRect(x, y, squareSize, squareSize);
+        }
+    }
+}
+
+// 🎨 Generate one NFT image
 async function generateNFTImage(nft, filename) {
     const width = 400;
     const height = 400;
     const canvasInstance = canvas.createCanvas(width, height);
-    const ctx = canvasInstance.getContext('2d');
+    const ctx = canvasInstance.getContext("2d");
 
-    // Extract color attribute
-    const colorAttr = nft.attributes.find(attr => attr.trait_type === 'Color').value;
+    drawGradientBackground(ctx, width, height); // background first
 
-    if (nft.type === 'Board') {
-        // For Board: Create 2x2 chessboard pattern
-        const colors = Array.isArray(colorAttr) ? colorAttr : [colorAttr, '#FFFFFF']; // Use second color or white
-        const squareSize = width / 2; // 200x200 per square
+    const colorAttr = nft.attributes.find(attr => attr.trait_type === "Color").value;
 
-        // Draw 2x2 grid with alternating colors
-        // Top-left (0,0) and bottom-right (1,1) use colors[0]
-        // Top-right (0,1) and bottom-left (1,0) use colors[1]
-        for (let row = 0; row < 2; row++) {
-            for (let col = 0; col < 2; col++) {
-                ctx.fillStyle = (row + col) % 2 === 0 ? colors[0] : colors[1];
-                ctx.fillRect(col * squareSize, row * squareSize, squareSize, squareSize);
-            }
-        }
+    if (nft.type === "Board") {
+        const colors = Array.isArray(colorAttr) ? colorAttr : [colorAttr, "#FFFFFF"];
+        drawBoard(ctx, width, height, colors);
     } else {
-        // For PieceSet1/PieceSet2: Draw knight with transparent background
         await drawKnight(ctx, colorAttr, width, height);
     }
 
-    // Save the image in the same directory as JSON
-    const outputPath = path.join(SKINS_DIR, filename.replace('.json', '.png'));
+    const outputPath = path.join(SKINS_DIR, filename.replace(".json", ".png"));
     const out = fs.createWriteStream(outputPath);
     const stream = canvasInstance.createPNGStream();
     stream.pipe(out);
 }
 
-// Function to generate images for all NFTs
+// ♻️ Process all JSON files in the skins folder
 async function generateAllNFTImages() {
-    // Read all JSON files from skins directory
-    const files = fs.readdirSync(SKINS_DIR).filter(file => file.endsWith('.json'));
+    const files = fs.readdirSync(SKINS_DIR).filter(file => file.endsWith(".json"));
 
-    // Generate an image for each NFT
     for (const file of files) {
         const filePath = path.join(SKINS_DIR, file);
-        const nftData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        const nftData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
         await generateNFTImage(nftData, file);
     }
 
-    console.log(`Generated ${files.length} NFT images in ${SKINS_DIR}.`);
+    console.log(`✅ Generated ${files.length} NFT images in ${SKINS_DIR}`);
 }
 
-// Call the function to generate images
+// 🚀 Start
 generateAllNFTImages();

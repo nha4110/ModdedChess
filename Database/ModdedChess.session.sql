@@ -25,11 +25,13 @@ CREATE TABLE IF NOT EXISTS "UserInfo" (
 CREATE TABLE IF NOT EXISTS "Skins" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
-    type TEXT CHECK (LOWER(type) IN ('board', 'pieceset1', 'pieceset2')) NOT NULL,  -- Ensure lowercase for type
+    type TEXT CHECK (LOWER(type) IN ('board', 'pieceset1', 'pieceset2')) NOT NULL,
     metadata_url TEXT NOT NULL UNIQUE,
+    image_url TEXT NOT NULL,
     collection_name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- ===========================
 -- 4. Inventory Table

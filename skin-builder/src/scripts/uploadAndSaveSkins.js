@@ -46,7 +46,7 @@ const uploadToPinata = async (filePath) => {
   }
 };
 
-const saveSkinToNeon = async (metadata, metadataUrl) => {
+const saveSkinToNeon = async (metadata, metadataUrl, imageUrl) => {
   try {
     const name = metadata.name || 'Unknown';
     const type = (metadata.type || 'unknown').toLowerCase(); // 'board', 'pieceset1', 'pieceset2'
@@ -56,13 +56,19 @@ const saveSkinToNeon = async (metadata, metadataUrl) => {
     const collectionName = 'case1';
 
     const query = `
-      INSERT INTO "Skins" (name, type, metadata_url, collection_name)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO "Skins" (name, type, metadata_url, image_url, collection_name)
+      VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (metadata_url) DO NOTHING
       RETURNING id;
     `;
 
-    const result = await client.query(query, [name, normalizedType, metadataUrl, collectionName]);
+    const result = await client.query(query, [
+      name,
+      normalizedType,
+      metadataUrl,
+      imageUrl,
+      collectionName,
+    ]);
 
     if (result.rows.length > 0) {
       console.log(`✅ Saved ${name} to Neon with ID ${result.rows[0].id}`);
@@ -92,12 +98,23 @@ const processSkins = async () => {
   try {
     await client.connect();
     for (const file of files) {
-      const fullPath = path.join(skinsFolder, file);
-      const metadata = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+      const fullPathJson = path.join(skinsFolder, file);
+      const fullPathPng = fullPathJson.replace(/\.json$/, '.png');
 
-      const metadataUrl = await uploadToPinata(fullPath);
-      if (metadataUrl) {
-        await saveSkinToNeon(metadata, metadataUrl);
+      if (!fs.existsSync(fullPathPng)) {
+        console.warn(`⚠️ PNG not found for ${file}, skipping...`);
+        continue;
+      }
+
+      const metadata = JSON.parse(fs.readFileSync(fullPathJson, 'utf-8'));
+
+      const [metadataUrl, imageUrl] = await Promise.all([
+        uploadToPinata(fullPathJson),
+        uploadToPinata(fullPathPng),
+      ]);
+
+      if (metadataUrl && imageUrl) {
+        await saveSkinToNeon(metadata, metadataUrl, imageUrl);
       }
     }
     console.log('🎉 All skins uploaded and saved.');
