@@ -2,293 +2,191 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-// Define types for chessboard and piece options
+// Define types for inventory items
 interface SkinOption {
   id: string;
   name: string;
-  filter: string; // CSS filter for unique icon color
-  iconBackground: string; // CSS class for unique icon background
+  image: string;
 }
 
-const chessboardOptions: SkinOption[] = [
-  {
-    id: 'board1',
-    name: 'Classic',
-    filter: 'grayscale(100%) brightness-110 sepia hue-rotate-90 saturate-200', // Light green
-    iconBackground: 'bg-lime-200/50', // Light green background
-  },
-  {
-    id: 'board2',
-    name: 'Wooden',
-    filter: 'grayscale(100%) brightness-110 sepia hue-rotate-60 saturate-150', // Olive green
-    iconBackground: 'bg-olive-600/50', // Olive background
-  },
-  {
-    id: 'board3',
-    name: 'Marble',
-    filter: 'grayscale(100%) brightness-110 hue-rotate-160 saturate-180', // Teal
-    iconBackground: 'bg-teal-300/50', // Teal background
-  },
-  {
-    id: 'board4',
-    name: 'Glass',
-    filter: 'grayscale(100%) brightness-110 sepia hue-rotate-100 saturate-250', // Deep lime
-    iconBackground: 'bg-lime-500/50', // Deep lime background
-  },
+// Minimal dummy data (options added later via inventory table)
+const boardOptions: SkinOption[] = [
+  { id: 'board1', name: 'Default Board', image: '/chess-board.png' },
 ];
 
-const chessPieceOptions: SkinOption[] = [
-  {
-    id: 'piece1',
-    name: 'Standard',
-    filter: 'grayscale(100%) brightness-110 hue-rotate-180 saturate-150', // Light blue
-    iconBackground: 'bg-blue-200/50', // Light blue background
-  },
-  {
-    id: 'piece2',
-    name: 'Fancy',
-    filter: 'grayscale(100%) brightness-110 hue-rotate-190 saturate-200', // Cyan
-    iconBackground: 'bg-cyan-300/50', // Cyan background
-  },
-  {
-    id: 'piece3',
-    name: 'Modern',
-    filter: 'grayscale(100%) brightness-110 hue-rotate-220 saturate-180', // Navy blue
-    iconBackground: 'bg-blue-600/50', // Navy background
-  },
-  {
-    id: 'piece4',
-    name: 'Minimal',
-    filter: 'grayscale(100%) brightness-110 hue-rotate-200 saturate-250', // Deep blue
-    iconBackground: 'bg-blue-400/50', // Deep blue background
-  },
+const pieceOptions: SkinOption[] = [
+  { id: 'piece1', name: 'Alpha Pieces', image: '/chess-pieces-alpha.png' },
 ];
 
-export default function ChessSkinSelector() {
+// Placeholder for case
+const casePlaceholder: SkinOption = {
+  id: 'case1',
+  name: 'Mystery Case',
+  image: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGo5aGw2bm5xMDdvbnFkd2g4OGpzMHhvcnd5ZzdqZWNuaHJ2YmhkcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2yWgF536HDyiA/giphy.gif',
+};
+
+export default function InventoryPage() {
+  const [activeTab, setActiveTab] = useState<'board' | 'piece' | 'case'>('board');
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<'board' | 'piece' | null>('board');
-  const [previewKey, setPreviewKey] = useState(0); // Force preview re-render
 
-  const handleBoardSelect = (id: string) => {
-    console.log('Selected board:', id);
-    setSelectedBoard(id);
-    setPreviewKey((prev) => prev + 1); // Force re-render
-  };
+  // Default piece
+  const defaultPiece = pieceOptions[0];
 
-  const handlePieceSelect = (id: string) => {
-    console.log('Selected piece:', id);
-    setSelectedPiece(id);
-    setPreviewKey((prev) => prev + 1); // Force re-render
-  };
-
-  const handleApply = () => {
-    if (selectedBoard && selectedPiece) {
-      console.log(`Applied: Board - ${selectedBoard}, Piece - ${selectedPiece}`);
-      setPreviewKey((prev) => prev + 1); // Force re-render preview
-    } else {
-      alert('Please select both a chessboard and a piece style.');
-    }
-  };
-
-  // Helper to get the selected option's filter
-  const getSelectedBoardFilter = () => {
-    const board = chessboardOptions.find((option) => option.id === selectedBoard);
-    const filter = board ? board.filter : '';
-    console.log('Board filter:', filter);
-    return filter;
-  };
-
-  const getSelectedPieceFilter = () => {
-    const piece = chessPieceOptions.find((option) => option.id === selectedPiece);
-    const filter = piece ? piece.filter : '';
-    console.log('Piece filter:', filter);
-    return filter;
-  };
+  // Board colors from chess1v1
+  const boardColor = '#c0fbf5'; // Light cyan for white tiles
+  const darkBoardColor = darkenColor(boardColor, 0.7); // Darkened for black tiles
 
   return (
-    <main
-      className="flex flex-col items-center justify-start w-full min-h-[120vh] text-white bg-fixed bg-cover bg-left bg-no-repeat"
-      style={{
-        backgroundImage: "url('/bg1.gif')",
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="flex flex-col items-center justify-center min-h-screen px-6 bg-[transparent] w-full relative"
-      >
-        {/* Header */}
-        <motion.h2
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="absolute top-10 left1/2 text-6xl font-extrabold text-center text-[#2cdd0c] drop-shadow-[0_0_20px_#2cdd0c] mb-16 font-[fantasy]"
-        >
-          🎨 Choose Your Chess Skin
-        </motion.h2>
-
-        {/* Navigation Tabs */}
-        <div className="flex justify-center w-full max-w-4xl mt-28 gap-12">
-          <motion.a
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className={`text-3xl font-bold text-lime-300 drop-shadow-[0_0_10px_#2cdd0c] cursor-pointer ${
-              activeSection === 'board' ? 'underline' : ''
-            }`}
-            onClick={() => setActiveSection('board')}
+    <main className="min-h-screen bg-gray-900 text-white flex flex-col">
+      {/* Top Bar */}
+      <div className="w-full p-4 flex justify-between items-center bg-black/30">
+        <Link href="/" className="text-lime-300 hover:text-lime-400 transition">
+          <svg
+            className="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            Chess Board
-          </motion.a>
-          <motion.a
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className={`text-3xl font-bold text-cyan-300 drop-shadow-[0_0_10px_#00b7eb] cursor-pointer ${
-              activeSection === 'piece' ? 'underline' : ''
-            }`}
-            onClick={() => setActiveSection('piece')}
-          >
-            Chess Pieces
-          </motion.a>
-        </div>
-
-        {/* Overlapped Content Area */}
-        <div className="relative w-full max-w-4xl mt-8">
-          {/* Chessboard Section */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: activeSection === 'board' ? 1 : 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className={`absolute top-0 left-0 w-full flex flex-col items-center gap-6 ${
-              activeSection === 'board' ? 'pointer-events-auto' : 'pointer-events-none'
-            }`}
-          >
-            <div className="border-4 border-lime-400 rounded-2xl p-6 w-full h-80 flex items-center justify-center bg-black/50">
-              {selectedBoard ? (
-                <Image
-                  key={`board-${previewKey}`}
-                  src="/icons/board-icon.png"
-                  alt="Selected chess board"
-                  width={200}
-                  height={200}
-                  className={`object-contain max-h-full max-w-full filter ${getSelectedBoardFilter()}`}
-                />
-              ) : (
-                <span className="text-gray-300 text-center text-xl">Select a board</span>
-              )}
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {chessboardOptions.map((option) => (
-                <motion.button
-                  key={option.id}
-                  whileHover={{ scale: 1.07 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-                  className={`w-40 h-40 rounded-xl bg-gradient-to-br ${
-                    selectedBoard === option.id
-                      ? 'from-transparent-700 to-lime-700'
-                      : 'from-green-400 to-lime-500 hover:from-green-500 hover:to-lime-600'
-                  } text-white text-lg font-bold shadow-lg hover:shadow-lime-500/60 transition-all duration-300 ease-in-out tracking-wide flex flex-col items-center justify-center`}
-                  onClick={() => handleBoardSelect(option.id)}
-                >
-                  <div
-                    className={`w-24 h-24 border-2 border-white rounded-lg flex items-center justify-center mb-2 ${option.iconBackground}`}
-                  >
-                    <Image
-                      src="/icons/board-icon.png"
-                      alt={option.name}
-                      width={80}
-                      height={80}
-                      className={`object-contain filter ${option.filter}`}
-                    />
-                  </div>
-                  <span>{option.name}</span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Chess Pieces Section */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: activeSection === 'piece' ? 1 : 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className={`absolute top-0 left-0 w-full flex flex-col items-center gap-6 ${
-              activeSection === 'piece' ? 'pointer-events-auto' : 'pointer-events-none'
-            }`}
-          >
-            <div className="border-4 border-cyan-400 rounded-2xl p-6 w-full h-80 flex items-center justify-center bg-black/50">
-              {selectedPiece ? (
-                <Image
-                  key={`piece-${previewKey}`}
-                  src="/icons/chess-icon.png"
-                  alt="Selected chess pieces"
-                  width={200}
-                  height={200}
-                  className={`object-contain max-h-full max-w-full filter ${getSelectedPieceFilter()}`}
-                />
-              ) : (
-                <span className="text-gray-300 text-center text-xl">Select a piece style</span>
-              )}
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {chessPieceOptions.map((option) => (
-                <motion.button
-                  key={option.id}
-                  whileHover={{ scale: 1.07 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-                  className={`w-40 h-40 rounded-xl bg-gradient-to-br ${
-                    selectedPiece === option.id
-                      ? 'from-blue-700 to-cyan-600'
-                      : 'from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500'
-                  } text-white text-lg font-bold shadow-lg hover:shadow-cyan-400/60 transition-all duration-300 ease-in-out tracking-wide flex flex-col items-center justify-center`}
-                  onClick={() => handlePieceSelect(option.id)}
-                >
-                  <div
-                    className={`w-24 h-24 border-2 border-white rounded-lg flex items-center justify-center mb-2 ${option.iconBackground}`}
-                  >
-                    <Image
-                      src="/icons/chess-icon.png"
-                      alt={option.name}
-                      width={80}
-                      height={80}
-                      className={`object-contain filter ${option.filter}`}
-                    />
-                  </div>
-                  <span>{option.name}</span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Apply Button */}
-        <motion.button
-          whileHover={{ scale: 1.07 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-          className="mt-[34rem] w-64 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-2xl font-bold shadow-lg hover:shadow-pink-500/60 transition-all duration-300 ease-in-out tracking-wide flex items-center justify-center mb-8"
-          onClick={handleApply}
-        >
-          Apply
-        </motion.button>
-
-        {/* Back Link */}
-        <Link
-          href="/"
-          className="mt-4 text-lg font-semibold text-lime-300 hover:text-lime-400 transition-all duration-500 ease-in-out hover:underline hover:tracking-wider drop-shadow-[0_0_4px_#2cdd0c]"
-        >
-          ← Back to Menu
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
+          </svg>
         </Link>
-        
-      </motion.div>
+        <div className="text-lime-300">
+          <svg
+            className="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-1 w-full max-w-7xl mx-auto p-4 gap-4">
+        {/* Sidebar with Tabs */}
+        <div className="w-64 bg-black/50 rounded-lg p-4">
+          <div className="flex gap-4 mb-4">
+            {['board', 'piece', 'case'].map((tab) => (
+              <button
+                key={tab}
+                className={`flex-1 text-lg font-semibold ${
+                  activeTab === tab
+                    ? 'text-lime-300 border-b-2 border-lime-300'
+                    : 'text-gray-400 hover:text-lime-400'
+                } transition`}
+                onClick={() => setActiveTab(tab as 'board' | 'piece' | 'case')}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Inventory Items */}
+          {activeTab === 'board' && (
+            <div className="space-y-2">
+              {boardOptions.map((board) => (
+                <button
+                  key={board.id}
+                  className={`w-full p-2 rounded-lg text-left ${
+                    selectedBoard === board.id ? 'bg-lime-500/50' : 'bg-gray-700/50'
+                  } hover:bg-lime-500/30 transition`}
+                  onClick={() => setSelectedBoard(board.id)}
+                >
+                  {board.name}
+                </button>
+              ))}
+            </div>
+          )}
+          {activeTab === 'piece' && (
+            <div className="space-y-2">
+              {pieceOptions.map((piece) => (
+                <button
+                  key={piece.id}
+                  className={`w-full p-2 rounded-lg text-left ${
+                    selectedPiece === piece.id ? 'bg-lime-500/50' : 'bg-gray-700/50'
+                  } hover:bg-lime-500/30 transition`}
+                  onClick={() => setSelectedPiece(piece.id)}
+                >
+                  {piece.name}
+                </button>
+              ))}
+            </div>
+          )}
+          {activeTab === 'case' && (
+            <div className="space-y-2">
+              <button
+                className="w-full p-2 rounded-lg text-left bg-gray-700/50 hover:bg-lime-500/30 transition"
+                onClick={() => {}}
+              >
+                {casePlaceholder.name}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Preview Area */}
+        <div className="flex-1 bg-black/50 rounded-lg p-4 flex items-center justify-center">
+          {activeTab !== 'case' ? (
+            <div className="relative">
+              <div
+                className="w-[400px] h-[400px] rounded-lg shadow-lg"
+                style={{
+                  background: `linear-gradient(45deg, ${boardColor} 25%, ${darkBoardColor} 25%, ${darkBoardColor} 50%, ${boardColor} 50%, ${boardColor} 75%, ${darkBoardColor} 75%)`,
+                  backgroundSize: '40px 40px',
+                }}
+              />
+              {selectedPiece || activeTab === 'piece' ? (
+                <Image
+                  src={
+                    selectedPiece
+                      ? pieceOptions.find((p) => p.id === selectedPiece)?.image ||
+                        defaultPiece.image
+                      : defaultPiece.image
+                  }
+                  alt="Chess Pieces"
+                  width={200}
+                  height={200}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                />
+              ) : null}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={casePlaceholder.image}
+                alt="Mystery Case"
+                className="w-[300px] h-[300px] rounded-lg shadow-lg object-cover"
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </main>
   );
+}
+
+// Darken color function from chess1v1
+function darkenColor(hex: string, factor: number): string {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
 }
