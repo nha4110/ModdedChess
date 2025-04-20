@@ -5,6 +5,7 @@ import styles from './Game.module.css';
 import { recordGameOutcome } from '../../utils/gameOutcome';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface EndGameModalProps {
   winner: string | null;
@@ -86,10 +87,12 @@ export default function EndGameModal({ winner, onPlayAgain, onBackToMenu }: EndG
         )}
 
         <div className={styles.endGameButtons}>
-          <div className={styles.chestReceivedContainer}>
-            <img
+        <div className={styles.chestReceivedContainer}>
+            <Image
               src="https://images.oki.gg/?url=https%3A%2F%2Fraw.githubusercontent.com%2FByMykel%2Fcounter-strike-image-tracker%2Fmain%2Fstatic%2Fpanorama%2Fimages%2Fecon%2Fweapon_cases%2Fcrate_community_29_png.png&w=128&h=97"
               alt="Chest"
+              width={128} 
+              height={97} 
               className={styles.chestImage}
             />
             <p className={styles.chestReceivedText}>
@@ -101,7 +104,7 @@ export default function EndGameModal({ winner, onPlayAgain, onBackToMenu }: EndG
             >
               Go to Inventory
             </button>
-          </div>
+        </div>
 
           <button onClick={onPlayAgain} className={styles.endGameButton}>
             Play Again

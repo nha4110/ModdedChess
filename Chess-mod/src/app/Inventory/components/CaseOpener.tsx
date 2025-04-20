@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
+import Image from 'next/image';
 
 interface CaseItem {
   id: string;
@@ -112,9 +113,11 @@ const CaseOpening: React.FC<CaseOpeningProps> = ({ pieceStyle, onFinish }) => {
     <div className="flex flex-col items-center w-full">
       {!isOpening && !selectedItem && (
         <>
-          <img
+          <Image
             src={casePlaceholder.image}
             alt={casePlaceholder.name}
+            width={256}
+            height={256}
             className="w-64 h-64 object-contain rounded-lg"
           />
           <p className="mt-4 text-lg font-semibold">{casePlaceholder.name}</p>
@@ -144,7 +147,13 @@ const CaseOpening: React.FC<CaseOpeningProps> = ({ pieceStyle, onFinish }) => {
                 className="w-32 h-24 bg-gray-700 rounded flex-shrink-0 flex items-center justify-center mx-1"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                <img src={item.image} alt={item.name} className="w-20 h-20 object-contain" />
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 object-contain"
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -160,9 +169,11 @@ const CaseOpening: React.FC<CaseOpeningProps> = ({ pieceStyle, onFinish }) => {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center"
         >
-          <img
+          <Image
             src={selectedItem.image}
             alt={selectedItem.name}
+            width={256}
+            height={256}
             className="w-64 h-64 object-contain rounded-lg"
           />
           <p className="mt-4 text-lg font-semibold">{selectedItem.name}</p>

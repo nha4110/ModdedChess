@@ -27,7 +27,7 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-// Interface for game outcome payload
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface GameOutcome {
   gameMode: string;
   winner: string | null; // 'white', 'black', or null for draw
@@ -83,7 +83,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Sanitize inputs
-    const sanitizedGameMode = validator.escape(gameMode.trim());
     const sanitizedUsername = validator.escape(playerUsername.trim());
 
     // Only update if there is a winner

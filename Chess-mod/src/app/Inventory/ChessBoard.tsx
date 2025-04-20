@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chess } from 'chess.js';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { pieceMaps } from './pieceMaps';
 import { SkinOption } from './types';
 
@@ -39,9 +40,11 @@ export default function ChessBoard({ boardId, pieceStyle, boardOptions }: ChessB
                 style={{ backgroundColor: tileColor }}
               >
                 {piece && (
-                  <img
+                  <Image
                     src={pieceMap[piece]}
                     alt={piece}
+                    width={60}
+                    height={60}
                     className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                   />
                 )}

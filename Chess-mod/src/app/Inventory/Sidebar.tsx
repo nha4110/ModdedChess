@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { SkinOption } from './types';
 
 interface SidebarProps {
@@ -90,7 +91,13 @@ export default function Sidebar({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <img className="w-16 h-16 object-cover" src={casePlaceholder.image} alt={casePlaceholder.name} />
+            <Image
+              className="w-16 h-16 object-cover"
+              src={casePlaceholder.image as string}
+              alt={casePlaceholder.name}
+              width={64}
+              height={64}
+            />
             <div>{casePlaceholder.name}</div>
           </motion.div>
         )}
