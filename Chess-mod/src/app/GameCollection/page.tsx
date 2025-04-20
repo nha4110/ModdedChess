@@ -50,7 +50,7 @@ export default function GameSelector() {
           </Link>
 
           {/* Bot Match */}
-          <Link href="/Bot">
+          <Link href="/boty">
             <motion.button
               whileHover={{ scale: 1.07 }}
               whileTap={{ scale: 0.95 }}

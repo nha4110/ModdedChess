@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
     "@metamask/detect-provider": "^2.0.0",
     "@solana/wallet-adapter-base": "^0.9.24",
     "@solana/wallet-adapter-react": "^0.15.36",
@@ -18,7 +19,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "chess.js": "^0.13.4",
-    "framer-motion": "^12.6.5",
+    "framer-motion": "^12.7.4",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "next": "^15.3.0",
@@ -39,6 +40,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^5.0.2",
     "@types/chess.js": "^0.13.7",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/pg": "^8.11.13",

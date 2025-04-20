@@ -10,7 +10,6 @@
   position: relative;
 }
 
-/* Overlay to ensure readability */
 .container::before {
   content: '';
   position: absolute;
@@ -18,7 +17,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay for contrast */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
@@ -37,7 +36,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  background: #ff4655; /* Chess-themed red */
+  background: #ff4655;
   border: none;
   border-radius: 0.75rem;
   cursor: pointer;
@@ -56,7 +55,32 @@
 }
 
 .placeholder {
-  width: 6rem; /* Matches back button width for balance */
+  width: 6rem;
+}
+
+/* Improved clock visibility */
+.clockContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1.5rem;
+  z-index: 2;
+}
+
+.clock {
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid #ffffff;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.activeClock {
+  background-color: rgba(72, 187, 120, 0.8);
+  border-color: #4ade80;
 }
 
 .board {
@@ -67,7 +91,7 @@
   border-radius: 0.75rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   z-index: 2;
-  position: relative; /* Ensure moving pieces are positioned relative to board */
+  position: relative;
 }
 
 .square {
@@ -82,11 +106,11 @@
 }
 
 .whiteTile {
-  background: #f0d9b5; /* Light chessboard color */
+  background: #f0d9b5;
 }
 
 .blackTile {
-  background: #b58863; /* Dark chessboard color */
+  background: #b58863;
 }
 
 .piece {
@@ -97,13 +121,14 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+  box-shadow: none;
 }
 
 .validMove {
   position: absolute;
   width: 1.25rem;
   height: 1.25rem;
-  background: #4ade80; /* Green for valid moves */
+  background: #4ade80;
   border: 2px solid #000000;
   border-radius: 50%;
   opacity: 0.8;
@@ -116,4 +141,120 @@
   color: #f87171;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
   z-index: 2;
+}
+
+.testButtons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.testButtons button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.testButtons button:hover {
+  background-color: #0056b3;
+}
+
+/* Ensure style dropdown is visible */
+.styleSelector {
+  margin-bottom: 1.5rem;
+  z-index: 2;
+}
+
+.styleDropdown {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+/* Endgame modal styles */
+.endGameModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+
+.endGameContent {
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.endGameTitle {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.chestNotification {
+  font-size: 1.125rem;
+  color: #4ade80;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.endGameButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.endGameButton {
+  background: #4b0082;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.endGameButton:hover {
+  background: #6a0dad;
+}
+
+.chestReceivedContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chestImage {
+  width: 80px;
+  height: auto;
+}
+
+.chestReceivedText {
+  font-size: 1rem;
+  color: #fcd34d;
+  font-weight: 600;
+  text-align: center;
 }

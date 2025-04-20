@@ -1,56 +1,36 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Chess, Square, Move, ShortMove } from 'chess.js';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { ChessInstance, Chess } from 'chess.js';
+import { motion } from 'framer-motion';
+import ChessBoard from './ChessBoard';
+import ChessClock from './ChessClock';
+import EndGameModal from './EndGameModal';
+import { Style, NFTJson } from './types';
 import styles from './Game.module.css';
 
-// Type definition for NFT JSON
-interface NFTJson {
-  name: string;
-  description: string;
-  type: string;
-  attributes: Array<{
-    trait_type: string;
-    value: string | string[];
-  }>;
-}
+// Hardcoded NFT JSON (replace with fetch later)
+const nftJson: NFTJson | null = null; // Test default case
 
-// Hardcoded NFT JSON (replace with fetch from Pinata/database later)
-const nftJson: NFTJson | null = null; // Test default case; restore original for NFT behavior
-// const nftJson: NFTJson | null = {
-//   name: 'Modernist PieceSet1 NFT',
-//   description: 'A unique PieceSet1 NFT with a style of Modernist and random effects.',
-//   type: 'PieceSet1',
-//   attributes: [
-//     { trait_type: 'Color', value: '#c0fbf5' },
-//     { trait_type: 'Effect', value: ['Shadow Wisp'] },
-//     { trait_type: 'Style', value: 'alpha' },
-//   ],
-// };
-
-interface Style {
-  name: string;
-  pieces: Record<string, string>;
-}
+// For testing purposes, easily removable
+const IS_TESTING = true;
 
 export default function GamePage() {
-  const [game, setGame] = useState(() => new Chess());
-  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
+  const [game, setGame] = useState<ChessInstance>(() => new Chess());
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastMovedSquare, setLastMovedSquare] = useState<Square | null>(null);
-  const [movingPiece, setMovingPiece] = useState<{ from: Square; to: Square; piece: string } | null>(null);
   const [pieceStyles, setPieceStyles] = useState<Style[]>([]);
-  const [selectedStyle, setSelectedStyle] = useState<string>('alpha'); // Default to alpha
-  const [boardColor, setBoardColor] = useState<string | null>(null); // NFT color or null for default
+  const [selectedStyle, setSelectedStyle] = useState<string>('alpha');
+  const [boardColor, setBoardColor] = useState<string | null>(null);
+  const [whiteTime, setWhiteTime] = useState(600); // 10 minutes in seconds
+  const [blackTime, setBlackTime] = useState(600);
+  const [gameEnded, setGameEnded] = useState<string | null>(null); // 'white', 'black', 'draw', or null
 
   const moveSound = useRef<HTMLAudioElement | null>(null);
   const captureSound = useRef<HTMLAudioElement | null>(null);
   const winSound = useRef<HTMLAudioElement | null>(null);
 
-  // Fetch styles from API
+  // Fetch styles
   useEffect(() => {
     async function fetchStyles() {
       try {
@@ -58,8 +38,6 @@ export default function GamePage() {
         const data = await response.json();
         if (data.success) {
           setPieceStyles(data.styles);
-        } else {
-          console.error('Failed to fetch styles:', data.error);
         }
       } catch (error) {
         console.error('Error fetching styles:', error);
@@ -68,17 +46,15 @@ export default function GamePage() {
     fetchStyles();
   }, []);
 
-  // Set style and color from NFT JSON (or use defaults)
+  // Set NFT styles
   useEffect(() => {
     if (!nftJson) {
-      setSelectedStyle('alpha'); // Default style
-      setBoardColor(null); // Use CSS default colors
+      setSelectedStyle('alpha');
+      setBoardColor(null);
       return;
     }
-
-    const styleAttr = nftJson.attributes.find((attr: { trait_type: string; value: string | string[] }) => attr.trait_type === 'Style');
-    const colorAttr = nftJson.attributes.find((attr: { trait_type: string; value: string | string[] }) => attr.trait_type === 'Color');
-
+    const styleAttr = nftJson.attributes.find((attr) => attr.trait_type === 'Style');
+    const colorAttr = nftJson.attributes.find((attr) => attr.trait_type === 'Color');
     setSelectedStyle(typeof styleAttr?.value === 'string' ? styleAttr.value : 'alpha');
     setBoardColor(typeof colorAttr?.value === 'string' ? colorAttr.value : null);
   }, []);
@@ -90,107 +66,64 @@ export default function GamePage() {
     winSound.current = new Audio('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3');
   }, []);
 
-  const validMoves = useMemo(
-    () =>
-      selectedSquare
-        ? game.moves({ square: selectedSquare, verbose: true }).map((move: Move) => move.to)
-        : [],
-    [game, selectedSquare]
-  );
-
-  const getSquarePosition = (square: Square) => {
-    const col = square.charCodeAt(0) - 97;
-    const row = 8 - parseInt(square[1]);
-    return { x: col * 10, y: row * 10 };
-  };
-
-  const handleClick = useCallback(
-    (square: Square) => {
-      const piece = game.get(square);
-      setError(null);
-
-      if (piece && piece.color === (isWhiteTurn ? 'w' : 'b')) {
-        setSelectedSquare(square);
-        return;
-      }
-
-      if (selectedSquare && validMoves.includes(square)) {
-        const move: ShortMove = {
-          from: selectedSquare,
-          to: square,
-        };
-
-        const selectedPiece = game.get(selectedSquare);
-        if (selectedPiece?.type === 'p' && (square[1] === '8' || square[1] === '1')) {
-          move.promotion = 'q';
-        }
-
-        try {
-          const isCapture = game.get(square) !== null;
-          if (!selectedPiece) throw new Error('No piece on selected square');
-
-          const pieceKey = `${selectedPiece.color}${selectedPiece.type}`;
-          setMovingPiece({ from: selectedSquare, to: square, piece: pieceKey });
-
-          setTimeout(() => {
-            const result = game.move(move);
-            if (result) {
-              setGame(new Chess(game.fen()));
-              setSelectedSquare(null);
-              setIsWhiteTurn((prev) => !prev);
-              setLastMovedSquare(square);
-              setMovingPiece(null);
-
-              if (isCapture) {
-                captureSound.current?.play().catch(() => {});
-              } else {
-                moveSound.current?.play().catch(() => {});
-              }
-
-              if (game.game_over()) {
-                setError(
-                  game.in_checkmate()
-                    ? `Checkmate! ${isWhiteTurn ? 'Black' : 'White'} wins!`
-                    : game.in_stalemate()
-                    ? "Stalemate! It's a draw."
-                    : "Draw!"
-                );
-                winSound.current?.play().catch(() => {});
-              }
-            }
-          }, 300);
-        } catch {
-          setError('Invalid move');
-          setSelectedSquare(null);
-          setMovingPiece(null);
-        }
+  // Handle clock
+  useEffect(() => {
+    if (gameEnded) return;
+    const timer = setInterval(() => {
+      if (isWhiteTurn) {
+        setWhiteTime((prev) => {
+          if (prev <= 0 && !gameEnded) {
+            setGameEnded('black');
+            return 0;
+          }
+          return prev - 1;
+        });
       } else {
-        setSelectedSquare(null);
+        setBlackTime((prev) => {
+          if (prev <= 0 && !gameEnded) {
+            setGameEnded('white');
+            return 0;
+          }
+          return prev - 1;
+        });
       }
-    },
-    [game, isWhiteTurn, selectedSquare, validMoves]
-  );
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isWhiteTurn, gameEnded]);
 
-  // Get piece mappings for the selected style
-  const pieceMap = useMemo(() => {
-    const style = pieceStyles.find((s) => s.name === selectedStyle);
-    return style ? style.pieces : {};
-  }, [pieceStyles, selectedStyle]);
+  const handleBackClick = useCallback(() => {
+    if (confirm('Leaving the game will end it with no winner. Are you sure?')) {
+      window.location.href = '/GameCollection';
+    }
+  }, []);
+
+  const resetGame = useCallback(() => {
+    setGame(new Chess());
+    setIsWhiteTurn(true);
+    setError(null);
+    setGameEnded(null);
+    setWhiteTime(600);
+    setBlackTime(600);
+  }, []);
+
+  // Testing function to manually set winner
+  const setWinnerForTesting = (winner: 'white' | 'black') => {
+    setGameEnded(winner);
+    winSound.current?.play().catch(() => {});
+  };
 
   return (
     <main className={styles.container}>
       <div className={styles.header}>
-        <Link href="/GameCollection">
-          <motion.button
-            className={styles.backButton}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            ← Back
-          </motion.button>
-        </Link>
+        <motion.button
+          className={styles.backButton}
+          onClick={handleBackClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          ← Back
+        </motion.button>
         <motion.h2
-          className={styles.title}
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -214,181 +147,50 @@ export default function GamePage() {
         </select>
       </div>
 
-      <motion.div
-        className={styles.board}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        {game.board().map((row, rowIndex) =>
-          row.map((square, colIndex) => {
-            const squareName = `${String.fromCharCode(97 + colIndex)}${8 - rowIndex}` as Square;
-            const isWhiteTile = (rowIndex + colIndex) % 2 === 0;
-            const piece = square ? `${square.color}${square.type}` : null;
-            const isValidMove = validMoves.includes(squareName);
-            const isSelected = selectedSquare === squareName;
-            const isLastMoved = lastMovedSquare === squareName;
+      <ChessClock whiteTime={whiteTime} blackTime={blackTime} isWhiteTurn={isWhiteTurn} />
 
-            return (
-              <SquareComponent
-                key={squareName}
-                squareName={squareName}
-                isWhiteTile={isWhiteTile}
-                piece={piece}
-                isValidMove={isValidMove}
-                isSelected={isSelected}
-                isLastMoved={isLastMoved}
-                onClick={() => handleClick(squareName)}
-                isMoving={movingPiece?.from === squareName}
-                pieceMap={pieceMap}
-                boardColor={boardColor}
-              />
-            );
-          })
-        )}
-        {movingPiece && (
-          <MovingPiece
-            piece={movingPiece.piece}
-            from={movingPiece.from}
-            to={movingPiece.to}
-            getSquarePosition={getSquarePosition}
-            pieceMap={pieceMap}
-          />
-        )}
-      </motion.div>
+      <ChessBoard
+        game={game}
+        setGame={setGame}
+        isWhiteTurn={isWhiteTurn}
+        setIsWhiteTurn={setIsWhiteTurn}
+        setError={setError}
+        pieceStyles={pieceStyles}
+        selectedStyle={selectedStyle}
+        boardColor={boardColor}
+        moveSound={moveSound}
+        captureSound={captureSound}
+        winSound={winSound}
+        setGameEnded={setGameEnded}
+      />
 
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            className={styles.error}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            {error}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
-  );
-}
+      {IS_TESTING && (
+        <div className={styles.testButtons} style={{ zIndex: 2 }}>
+          <button onClick={() => setWinnerForTesting('white')}>Test White Wins</button>
+          <button onClick={() => setWinnerForTesting('black')}>Test Black Wins</button>
+        </div>
+      )}
 
-interface SquareComponentProps {
-  squareName: Square;
-  isWhiteTile: boolean;
-  piece: string | null;
-  isValidMove: boolean;
-  isSelected: boolean;
-  isLastMoved: boolean;
-  onClick: () => void;
-  isMoving?: boolean;
-  pieceMap: Record<string, string>;
-  boardColor: string | null;
-}
+      {error && (
+        <motion.div
+          className={styles.error}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+          style={{ zIndex: 2 }}
+        >
+          {error}
+        </motion.div>
+      )}
 
-function SquareComponent({
-  squareName,
-  isWhiteTile,
-  piece,
-  isValidMove,
-  isSelected,
-  isLastMoved,
-  onClick,
-  isMoving,
-  pieceMap,
-  boardColor,
-}: SquareComponentProps) {
-  const pieceSrc = piece ? pieceMap[piece] : null;
-
-  return (
-    <motion.div
-      className={`${styles.square} ${isWhiteTile ? styles.whiteTile : styles.blackTile}`}
-      style={boardColor ? { backgroundColor: isWhiteTile ? boardColor : darkenColor(boardColor, 0.7) } : {}}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      aria-label={`Square ${squareName}${piece ? ` containing ${piece}` : ''}`}
-      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter') onClick();
-      }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      {pieceSrc && !isMoving && (
-        <motion.img
-          src={pieceSrc}
-          alt={piece || 'chess piece'}
-          className={styles.piece}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-          }}
-          animate={{
-            scale: isSelected ? 1.15 : 1,
-            rotate: isSelected ? [0, 5, -5, 0] : 0,
-            boxShadow: isLastMoved ? '0 0 8px #FFD700' : 'none',
-          }}
-          transition={{ duration: 0.3 }}
+      {gameEnded && (
+        <EndGameModal
+          winner={gameEnded}
+          onPlayAgain={resetGame}
+          onBackToMenu={() => (window.location.href = '/GameCollection')}
         />
       )}
-      <AnimatePresence>
-        {isValidMove && (
-          <motion.div
-            className={styles.validMove}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.8, y: [0, -3, 0] }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.4, y: { repeat: Infinity, duration: 1 } }}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
+    </main>
   );
-}
-
-interface MovingPieceProps {
-  piece: string;
-  from: Square;
-  to: Square;
-  getSquarePosition: (square: Square) => { x: number; y: number };
-  pieceMap: Record<string, string>;
-}
-
-function MovingPiece({ piece, from, to, getSquarePosition, pieceMap }: MovingPieceProps) {
-  const pieceSrc = pieceMap[piece];
-  const fromPos = getSquarePosition(from);
-  const toPos = getSquarePosition(to);
-
-  return (
-    <motion.img
-      src={pieceSrc}
-      alt={piece}
-      className={styles.piece}
-      style={{
-        width: '10vmin',
-        height: '10vmin',
-        objectFit: 'contain',
-        position: 'absolute',
-        left: `${fromPos.x}vmin`,
-        top: `${fromPos.y}vmin`,
-      }}
-      animate={{
-        left: `${toPos.x}vmin`,
-        top: `${toPos.y}vmin`,
-      }}
-      transition={{ duration: 0.3 }}
-    />
-  );
-}
-
-// Utility to darken a color for black tiles
-function darkenColor(hex: string, factor: number): string {
-  const cleanHex = hex.replace('#', '');
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-
-  return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
 }

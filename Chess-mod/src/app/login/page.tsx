@@ -30,6 +30,7 @@ const Login = () => {
 
       if (res.ok) {
         localStorage.setItem('userId', data.userId);
+        localStorage.setItem('token', data.token); // Store the JWT token
         router.push('/profile');
       } else {
         setMessage({ text: data.error || 'Login failed', type: 'error' });
@@ -117,7 +118,7 @@ const Login = () => {
           </motion.button>
 
           <p className={styles.signupText}>
-            Don&apos;t have an account?{' '}
+            Don't have an account?{' '}
             <Link href="/signup" className={styles.signupLink}>
               Sign Up
             </Link>

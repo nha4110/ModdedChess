@@ -1,7 +1,7 @@
-// src/app/api/login/route.ts
-import { pool } from '@/lib/db'; // Correct import path
+import { pool } from '@/lib/db';
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request) {
   const { username, password } = await req.json();
@@ -21,15 +21,23 @@ export async function POST(req: Request) {
     const user = result.rows[0];
 
     // Ensure you're using the correct column name (password_hash) from your schema
-    const isMatch = await bcrypt.compare(password, user.password_hash); // Correct column name is password_hash
+    const isMatch = await bcrypt.compare(password, user.password_hash);
 
     // If the password doesn't match
     if (!isMatch) {
       return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
     }
 
-    // If login is successful, return a success message or any necessary data
-    return NextResponse.json({ message: 'Login successful', userId: user.id }, { status: 200 });
+    // Generate JWT token
+    const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET!, {
+      expiresIn: '1h',
+    });
+
+    // Return success response with token and userId
+    return NextResponse.json(
+      { message: 'Login successful', userId: user.id, token },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error logging in:', error);
     return NextResponse.json({ error: 'Failed to login' }, { status: 500 });
