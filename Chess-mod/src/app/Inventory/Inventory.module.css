@@ -1,0 +1,223 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #1e2a44; /* Dark blue background */
+  color: #ffffff;
+}
+
+.header {
+  padding: 1rem;
+  background-color: #2a3b66; /* Lighter blue for header */
+  border-bottom: 1px solid #3b4a7b;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  margin: 0 2rem;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.navLink:hover {
+  color: #60a5fa; /* Light blue hover */
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  width: calc(100% - 4rem); /* Smaller than background */
+  margin: 2rem; /* Border around boxes */
+  padding: 0;
+  gap: 1rem;
+  height: calc(100vh - 6rem); /* Fixed height */
+}
+
+.sidebar {
+  width: 300px;
+  background-color: #2a3b66; /* Lighter blue for boxes */
+  padding: 1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fixed height */
+  border: 1px solid #3b4a7b;
+  border-radius: 0.5rem;
+}
+
+.tabButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tabButton {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  flex: 1;
+}
+
+.tabButton:hover {
+  background-color: #3b4a7b; /* Darker blue hover */
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.caseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 0.5rem;
+  max-height: 600px; /* For 15 cases (~5 rows) */
+  min-height: 100px; /* Prevent collapse */
+  overflow-y: auto; /* Scroll for overflow */
+  padding: 0.5rem; /* Scrollbar visibility */
+}
+
+.caseItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.caseItem:hover {
+  background-color: #3b4a7b;
+}
+
+.mainBox {
+  flex: 1;
+  background-color: #2a3b66; /* Lighter blue for boxes */
+  padding: 1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Fixed height */
+  border: 1px solid #3b4a7b;
+  border-radius: 0.5rem;
+}
+
+.mainContentBox {
+  width: 100%;
+  max-width: 800px;
+  background-color: #2a3b66;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Match mainBox */
+  overflow-y: auto;
+}
+
+.chessBoard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1;
+  background-color: #ffffff;
+}
+
+.pieceButton, .boardButton {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: left;
+  background-color: #2a3b66;
+  color: #ffffff;
+  border: 2px solid #60a5fa;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.pieceButton:hover, .boardButton:hover {
+  background-color: #3b4a7b;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: rgba(132, 204, 22, 0.5); /* bg-lime-500/50 */
+  border-color: #84cc16;
+}
+
+.unselected {
+  background-color: rgba(55, 65, 81, 0.5); /* bg-gray-700/50 */
+}
+
+.pieceButton:hover.selected, .boardButton:hover.selected {
+  background-color: rgba(132, 204, 22, 0.5);
+  transform: none; /* No move-up effect */
+}
+
+.pieceButton:hover.unselected, .boardButton:hover.unselected {
+  background-color: rgba(132, 204, 22, 0.3); /* bg-lime-500/30 */
+  transform: translateY(-2px); /* Move-up for unselected only */
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    height: auto;
+    gap: 0.5rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border: 1px solid #3b4a7b;
+  }
+
+  .mainBox {
+    height: auto;
+  }
+
+  .mainContentBox {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .tabButtons {
+    flex-direction: column;
+  }
+
+  .caseGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+    max-height: 300px;
+  }
+
+  .headerContent {
+    margin: 0 1rem;
+  }
+}

@@ -1,0 +1,12 @@
+[programs.devnet]
+solana_nft_mint = "4ysKbtmk6SX1rgLKX9TFEwuSNvF6fQMjUdYDtu4V1CSy"  # Replace with the new program ID
+
+[registry]
+url = "https://api.devnet.solana.com"
+
+[provider]
+cluster = "devnet"
+wallet = "/root/.config/solana/new-id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

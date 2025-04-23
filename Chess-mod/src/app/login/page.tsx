@@ -30,7 +30,8 @@ const Login = () => {
 
       if (res.ok) {
         localStorage.setItem('userId', data.userId);
-        localStorage.setItem('token', data.token); // Store the JWT token
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', username); // Store the username
         router.push('/profile');
       } else {
         setMessage({ text: data.error || 'Login failed', type: 'error' });
