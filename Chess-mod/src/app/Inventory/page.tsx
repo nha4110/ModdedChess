@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Chess } from 'chess.js';
@@ -9,6 +10,15 @@ import BoardTab from './BoardTab';
 import PieceTab from './PieceTab';
 import CaseTab from './CaseTab';
 import styles from './Inventory.module.css';
+
+// Dynamically import WalletMultiButton with SSR disabled
+const WalletMultiButtonDynamic = dynamic(
+  () => import('@solana/wallet-adapter-react-ui').then((mod) => mod.WalletMultiButton),
+  { ssr: false }
+);
+
+// Ensure the wallet adapter styles are included
+import '@solana/wallet-adapter-react-ui/styles.css';
 
 interface SkinOption {
   id: string;
@@ -171,6 +181,12 @@ export default function InventoryPage() {
             </svg>
             Profile
           </Link>
+          {/* Add Wallet Connect Button with dynamic import */}
+          <div className={styles.navLink}>
+            <Suspense fallback={<div>Loading wallet button...</div>}>
+              <WalletMultiButtonDynamic />
+            </Suspense>
+          </div>
         </div>
       </div>
 

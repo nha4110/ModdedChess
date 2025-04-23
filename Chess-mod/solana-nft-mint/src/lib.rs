@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-declare_id!("4ysKbtmk6SX1rgLKX9TFEwuSNvF6fQMjUdYDtu4V1CSy"); // Replace with the actual program ID from target/deploy/solana_nft_mint-keypair.json
+declare_id!("FSHb5HUmgnbDXuy4AX2YR1zH33UcESpS1Wk75MdSuU47"); // Replace with the actual program ID from target/deploy/solana_nft_mint-keypair.json
 
 #[program]
 pub mod solana_nft_mint {
