@@ -85,9 +85,9 @@ const CaseTab: React.FC<CaseTabProps> = ({
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      //if (!response.ok) {
+        //throw new Error(`HTTP error! Status: ${response.status}`);
+      //}
 
       const data = await response.json();
       console.log('Mint NFT response:', data);

@@ -144,14 +144,16 @@ export default function Home() {
             </motion.div>
           </Link>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className={buttonStyles}
-          >
-            Audition
-          </motion.button>
+          <Link href="/Shop">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className={buttonStyles}
+            >
+              Shop
+            </motion.button>
+          </Link>
         </div>
       </div>
 
