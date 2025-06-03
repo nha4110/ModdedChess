@@ -1,0 +1,22 @@
+{
+  "name": "gioco PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of gioco and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#1023c0"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Lightning Spark",
+        "Aurora Flicker"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "gioco"
+    }
+  ]
+}

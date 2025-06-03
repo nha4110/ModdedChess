@@ -1,0 +1,23 @@
+{
+  "name": "governor PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of governor and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#d6f54b"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "None",
+        "Aurora Flicker",
+        "Pulse Glow"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "governor"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "chessnut PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of chessnut and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#e426ee"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Pulse Glow",
+        "Flame Trail",
+        "None"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "chessnut"
+    }
+  ]
+}

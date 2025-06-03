@@ -1,0 +1,21 @@
+{
+  "name": "cooke PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of cooke and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#949f9c"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "cooke"
+    }
+  ]
+}

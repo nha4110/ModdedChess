@@ -1,0 +1,18 @@
+{
+  "name": "horsey PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of horsey and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#01d1db"
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "horsey"
+    }
+  ]
+}

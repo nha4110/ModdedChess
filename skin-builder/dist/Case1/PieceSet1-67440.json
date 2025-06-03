@@ -1,0 +1,22 @@
+{
+  "name": "caliente PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of caliente and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#55c428"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "None",
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "caliente"
+    }
+  ]
+}

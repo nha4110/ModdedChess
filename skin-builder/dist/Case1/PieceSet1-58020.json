@@ -1,0 +1,23 @@
+{
+  "name": "chess7 PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of chess7 and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#9aca09"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Flame Trail",
+        "None"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "chess7"
+    }
+  ]
+}

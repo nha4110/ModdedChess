@@ -1,0 +1,21 @@
+{
+  "name": "dubrovny PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of dubrovny and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#7de18d"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "dubrovny"
+    }
+  ]
+}

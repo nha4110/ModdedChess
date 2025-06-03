@@ -1,0 +1,18 @@
+{
+  "name": "firi PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of firi and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#2c0af1"
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "firi"
+    }
+  ]
+}

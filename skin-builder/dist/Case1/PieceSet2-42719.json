@@ -1,0 +1,22 @@
+{
+  "name": "companion PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of companion and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#b16351"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "None",
+        "Aurora Flicker"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "companion"
+    }
+  ]
+}

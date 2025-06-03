@@ -1,0 +1,25 @@
+{
+  "name": "Classic Wood Board NFT",
+  "description": "A unique Board NFT with a style of Classic Wood and random effects.",
+  "type": "Board",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": [
+        "#bd1bfb",
+        "#7050b2"
+      ]
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp",
+        "Pulse Glow"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "Classic Wood"
+    }
+  ]
+}

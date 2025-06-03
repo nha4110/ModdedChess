@@ -1,0 +1,22 @@
+{
+  "name": "fresca PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of fresca and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#16f55d"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Lightning Spark"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "fresca"
+    }
+  ]
+}

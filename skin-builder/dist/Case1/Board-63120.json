@@ -1,0 +1,21 @@
+{
+  "name": "Lava Cracks Board NFT",
+  "description": "A unique Board NFT with a style of Lava Cracks and random effects.",
+  "type": "Board",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": [
+        "#15dd5c",
+        "#5ec7a1"
+      ]
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Lava Cracks"
+    }
+  ]
+}

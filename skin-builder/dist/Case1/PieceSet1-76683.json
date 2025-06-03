@@ -1,0 +1,23 @@
+{
+  "name": "anarcandy PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of anarcandy and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#5a08a3"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Aurora Flicker",
+        "Shadow Wisp",
+        "Pulse Glow"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "anarcandy"
+    }
+  ]
+}

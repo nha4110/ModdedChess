@@ -1,0 +1,18 @@
+{
+  "name": "alpha PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of alpha and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#1c577e"
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "alpha"
+    }
+  ]
+}

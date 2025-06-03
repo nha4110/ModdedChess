@@ -1,0 +1,21 @@
+{
+  "name": "kiwen-suwi PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of kiwen-suwi and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#a6c00c"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "kiwen-suwi"
+    }
+  ]
+}

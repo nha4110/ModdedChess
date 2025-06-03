@@ -1,0 +1,18 @@
+{
+  "name": "caliente PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of caliente and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#540c70"
+    },
+    {
+      "trait_type": "Effect"
+    },
+    {
+      "trait_type": "Style",
+      "value": "caliente"
+    }
+  ]
+}

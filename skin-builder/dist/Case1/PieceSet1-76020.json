@@ -1,0 +1,21 @@
+{
+  "name": "cardinal PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of cardinal and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#28904f"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "cardinal"
+    }
+  ]
+}

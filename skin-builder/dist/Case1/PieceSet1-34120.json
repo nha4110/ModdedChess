@@ -1,0 +1,21 @@
+{
+  "name": "governor PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of governor and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#7c80ec"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "governor"
+    }
+  ]
+}

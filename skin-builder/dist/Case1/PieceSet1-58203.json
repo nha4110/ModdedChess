@@ -1,0 +1,23 @@
+{
+  "name": "disguised PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of disguised and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#bbd60f"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail",
+        "Pulse Glow",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "disguised"
+    }
+  ]
+}

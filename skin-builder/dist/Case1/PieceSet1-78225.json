@@ -1,0 +1,21 @@
+{
+  "name": "icpieces PieceSet1 NFT",
+  "description": "A unique PieceSet1 NFT with a style of icpieces and random effects.",
+  "type": "PieceSet1",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#fcdb3a"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "icpieces"
+    }
+  ]
+}

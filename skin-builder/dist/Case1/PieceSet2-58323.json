@@ -1,0 +1,23 @@
+{
+  "name": "celtic PieceSet2 NFT",
+  "description": "A unique PieceSet2 NFT with a style of celtic and random effects.",
+  "type": "PieceSet2",
+  "attributes": [
+    {
+      "trait_type": "Color",
+      "value": "#c16cf4"
+    },
+    {
+      "trait_type": "Effect",
+      "value": [
+        "Flame Trail",
+        "Pulse Glow",
+        "Shadow Wisp"
+      ]
+    },
+    {
+      "trait_type": "Style",
+      "value": "celtic"
+    }
+  ]
+}
